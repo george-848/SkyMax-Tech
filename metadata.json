@@ -1,0 +1,6 @@
+{
+  "name": "Meridian Systems",
+  "description": "Enterprise technology solutions company delivering web application development, cloud infrastructure, system administration, business networking, CCTV security, and IT consulting.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
