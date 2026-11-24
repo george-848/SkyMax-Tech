@@ -55,10 +55,10 @@ export function SolutionsAndWhySection({onDiscussSolution, lang}: SolutionsAndWh
               </p>
             </div>
             <h2
-              className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight leading-tight text-[var(--text-primary)]"
+              className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight leading-tight"
               style={{textWrap: 'balance'}}
             >
-              {whySection.heading}
+              <span className="text-blend-title">{whySection.heading}</span>
             </h2>
             <p className="text-sm sm:text-base text-[var(--text-secondary)] leading-relaxed">
               {whySection.subtitle}
@@ -129,8 +129,8 @@ export function SolutionsAndWhySection({onDiscussSolution, lang}: SolutionsAndWh
                   {whySection.solutionsEyebrow}
                 </p>
               </div>
-              <h3 className="mt-2 text-2xl sm:text-3xl font-extrabold text-[var(--text-primary)] tracking-tight">
-                {whySection.solutionsHeading}
+              <h3 className="mt-2 text-2xl sm:text-3xl font-extrabold tracking-tight">
+                <span className="text-blend-title">{whySection.solutionsHeading}</span>
               </h3>
             </div>
             <button

@@ -69,10 +69,10 @@ export function ProjectsSection({lang, onSelectProject}: ProjectsSectionProps) {
             </p>
           </div>
           <h2
-            className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-[var(--text-primary)]"
+            className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight"
             style={{textWrap: 'balance'}}
           >
-            {copy.heading}
+            <span className="text-blend-title">{copy.heading}</span>
           </h2>
           <p className="text-sm sm:text-base lg:text-[17px] text-[var(--text-secondary)] leading-relaxed">
             {copy.subtitle}

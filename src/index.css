@@ -199,3 +199,13 @@
     linear-gradient(color-mix(in srgb, var(--text-primary) 5%, transparent) 1px, transparent 1px);
   background-size: 56px 56px;
 }
+
+.text-blend-title {
+  background-image: var(--blend-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  padding-bottom: 0.04em;
+}
+

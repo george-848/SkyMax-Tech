@@ -99,20 +99,14 @@ export function HeroSection({onStartProject, onViewProjects, lang}: HeroSectionP
 
             <motion.h1
               {...fadeUp(0.08)}
-              className="font-extrabold tracking-tight text-[var(--text-primary)] leading-[1.08]"
+              className="font-extrabold tracking-tight leading-[1.12]"
               style={{
                 fontSize: 'clamp(1.95rem, 4.2vw, 3.65rem)',
                 textWrap: 'balance',
               }}
             >
-              {hero.titlePrefix}{' '}
-              <span
-                className="bg-clip-text text-transparent"
-                style={{
-                  backgroundImage: 'var(--blend-gradient)',
-                }}
-              >
-                {hero.titleHighlight}
+              <span className="text-blend-title">
+                {hero.titlePrefix} {hero.titleHighlight}
               </span>
             </motion.h1>
 

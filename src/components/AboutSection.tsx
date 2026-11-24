@@ -86,10 +86,10 @@ export function AboutSection({onScheduleConsultation, lang}: AboutSectionProps) 
                 </p>
               </div>
               <h2
-                className="mt-2 text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-[var(--text-primary)] leading-tight"
+                className="mt-2 text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight leading-tight"
                 style={{textWrap: 'balance'}}
               >
-                {about.heading}
+                <span className="text-blend-title">{about.heading}</span>
               </h2>
             </div>
 

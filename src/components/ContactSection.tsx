@@ -235,10 +235,10 @@ export function ContactSection({lang, preselectedService}: ContactSectionProps) 
                 </p>
               </div>
               <h2
-                className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-[var(--text-primary)]"
+                className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight"
                 style={{textWrap: 'balance'}}
               >
-                {copy.heading}
+                <span className="text-blend-title">{copy.heading}</span>
               </h2>
               <p className="text-sm sm:text-base text-[var(--text-secondary)] leading-relaxed">
                 {copy.subtitle}
@@ -348,8 +348,8 @@ export function ContactSection({lang, preselectedService}: ContactSectionProps) 
                     <CheckCircle2 className="w-6 h-6" aria-hidden="true" />
                   </div>
 
-                  <h3 className="mt-5 text-2xl font-bold text-[var(--text-primary)]">
-                    {copy.readyTitle}
+                  <h3 className="mt-5 text-2xl font-bold">
+                    <span className="text-blend-title">{copy.readyTitle}</span>
                   </h3>
                   <p className="mt-2 text-sm text-[var(--text-secondary)] leading-relaxed">
                     {copy.readySubtitlePrefix}{' '}
@@ -430,8 +430,8 @@ export function ContactSection({lang, preselectedService}: ContactSectionProps) 
               ) : (
                 <form onSubmit={handleSubmit} noValidate className="space-y-5 text-left">
                   <div className="pb-2 border-b border-[var(--border-subtle)]">
-                    <h3 className="text-lg sm:text-xl font-bold text-[var(--text-primary)]">
-                      {copy.formTitle}
+                    <h3 className="text-lg sm:text-xl font-bold">
+                      <span className="text-blend-title">{copy.formTitle}</span>
                     </h3>
                     <p className="mt-1 text-[13px] sm:text-sm text-[var(--text-muted)]">
                       {copy.formSubtitlePrefix} <span className="text-[var(--accent)]">*</span>{' '}
