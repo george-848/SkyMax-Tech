@@ -13,12 +13,13 @@ import {
   ShieldCheck,
 } from 'lucide-react';
 import {AnimatePresence, motion, useReducedMotion} from 'motion/react';
-import {SERVICES, ServiceItem} from '../data/companyConfig';
+import {I18N, LanguageCode, ServiceItem} from '../data/companyConfig';
 import {MODERN_EASE, Reveal, StaggerCard} from './MotionPrimitives';
 
 interface ServicesSectionProps {
   onLearnMore: (service: ServiceItem) => void;
   onRequestServiceQuote: (serviceTitle: string) => void;
+  lang: LanguageCode;
 }
 
 const ICON_MAP = {
@@ -33,9 +34,11 @@ const ICON_MAP = {
 export function ServicesSection({
   onLearnMore,
   onRequestServiceQuote,
+  lang,
 }: ServicesSectionProps) {
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const prefersReducedMotion = useReducedMotion();
+  const {servicesSection, services} = I18N[lang];
 
   const toggleExpand = (id: string) => {
     setExpandedId((prev) => (prev === id ? null : id));
@@ -44,7 +47,7 @@ export function ServicesSection({
   return (
     <section
       id="services"
-      className="py-20 lg:py-24 bg-[var(--bg-primary)] text-[var(--text-primary)] relative overflow-hidden border-b border-[var(--border-subtle)]"
+      className="py-14 sm:py-20 lg:py-24 bg-[var(--bg-primary)] text-[var(--text-primary)] relative overflow-hidden border-b border-[var(--border-subtle)]"
     >
       <div
         aria-hidden="true"
@@ -58,27 +61,26 @@ export function ServicesSection({
       />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <Reveal className="max-w-2xl mx-auto text-center mb-14 space-y-3">
+        <Reveal className="max-w-2xl mx-auto text-center mb-10 sm:mb-14 space-y-3">
           <div className="inline-flex items-center justify-center gap-2">
             <Layers className="w-3.5 h-3.5 text-[var(--accent)]" aria-hidden="true" />
-            <p className="text-xs font-mono font-bold tracking-[0.2em] uppercase text-[var(--accent)]">
-              What We Do
+            <p className="text-[11px] sm:text-xs font-mono font-bold tracking-[0.18em] uppercase text-[var(--accent)]">
+              {servicesSection.eyebrow}
             </p>
           </div>
           <h2
-            className="text-3xl sm:text-4xl font-extrabold tracking-tight text-[var(--text-primary)]"
+            className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-[var(--text-primary)]"
             style={{textWrap: 'balance'}}
           >
-            Core Technology Services
+            {servicesSection.heading}
           </h2>
-          <p className="text-sm sm:text-base text-[var(--text-secondary)] leading-relaxed">
-            Full-stack SaaS web applications, cloud hosting, system administration, business
-            networking, CCTV security, and IT consulting.
+          <p className="text-sm sm:text-base lg:text-[17px] text-[var(--text-secondary)] leading-relaxed">
+            {servicesSection.subtitle}
           </p>
         </Reveal>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 text-left">
-          {SERVICES.map((service, index) => {
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 text-left">
+          {services.map((service, index) => {
             const Icon = ICON_MAP[service.iconName];
             const isExpanded = expandedId === service.id;
 
@@ -90,9 +92,9 @@ export function ServicesSection({
                 >
                   <div
                     aria-hidden="true"
-                    className="absolute top-0 left-0 right-0 h-0.5 opacity-75"
+                    className="absolute top-0 left-0 right-0 h-0.5 opacity-80"
                     style={{
-                      background: 'linear-gradient(90deg, var(--accent), var(--accent-deep))',
+                      background: 'var(--blend-gradient)',
                     }}
                   />
 
@@ -106,17 +108,17 @@ export function ServicesSection({
                       </span>
                     </div>
 
-                    <h3 className="text-lg font-bold text-[var(--text-primary)] mb-2 group-hover:text-[var(--accent)] transition-colors">
+                    <h3 className="text-lg sm:text-xl font-bold text-[var(--text-primary)] mb-2 group-hover:text-[var(--accent)] transition-colors">
                       {service.title}
                     </h3>
 
                     {service.callout && (
-                      <p className="text-xs font-semibold text-[var(--accent)] mb-2">
+                      <p className="text-[13px] font-semibold text-[var(--accent)] mb-2">
                         {service.callout}
                       </p>
                     )}
 
-                    <p className="text-xs sm:text-sm text-[var(--text-secondary)] leading-relaxed mb-5">
+                    <p className="text-sm text-[var(--text-secondary)] leading-relaxed mb-5">
                       {service.description}
                     </p>
                   </div>
@@ -130,14 +132,14 @@ export function ServicesSection({
                         transition={{duration: 0.25, ease: MODERN_EASE}}
                         className="overflow-hidden mb-5 pt-4 border-t border-[var(--border-subtle)]"
                       >
-                        <p className="text-[10px] font-mono uppercase tracking-[0.18em] text-[var(--accent)] font-bold mb-2.5">
-                          What You Get
+                        <p className="text-[11px] font-mono uppercase tracking-[0.16em] text-[var(--accent)] font-bold mb-2.5">
+                          {servicesSection.whatYouGet}
                         </p>
                         <ul className="space-y-2 mb-4">
                           {service.deliverables.map((item) => (
                             <li
                               key={item}
-                              className="flex items-start gap-2 text-xs text-[var(--text-secondary)]"
+                              className="flex items-start gap-2 text-[13px] text-[var(--text-secondary)]"
                             >
                               <Check
                                 className="w-3.5 h-3.5 text-[var(--accent)] shrink-0 mt-0.5"
@@ -150,21 +152,24 @@ export function ServicesSection({
                         <button
                           type="button"
                           onClick={() => onLearnMore(service)}
-                          className="text-xs font-semibold text-[var(--text-primary)] hover:text-[var(--accent)] transition-colors cursor-pointer"
+                          className="text-[13px] font-semibold text-[var(--text-primary)] hover:text-[var(--accent)] transition-colors cursor-pointer"
                         >
-                          See all {service.capabilities.length} included features &rarr;
+                          {servicesSection.seeAllPrefix} {service.capabilities.length}{' '}
+                          {servicesSection.seeAllSuffix} &rarr;
                         </button>
                       </motion.div>
                     )}
                   </AnimatePresence>
 
-                  <div className="flex items-center justify-between pt-4 mt-auto border-t border-[var(--border-subtle)]">
+                  <div className="flex flex-wrap items-center justify-between gap-2 pt-4 mt-auto border-t border-[var(--border-subtle)]">
                     <button
                       type="button"
                       onClick={() => toggleExpand(service.id)}
                       className="inline-flex items-center gap-1.5 text-xs font-semibold text-[var(--text-secondary)] hover:text-[var(--accent)] transition-colors cursor-pointer whitespace-nowrap shrink-0"
                     >
-                      <span>{isExpanded ? 'Hide Details' : 'View Deliverables'}</span>
+                      <span>
+                        {isExpanded ? servicesSection.hideDetails : servicesSection.viewDeliverables}
+                      </span>
                       {isExpanded ? (
                         <ChevronUp className="w-3.5 h-3.5" aria-hidden="true" />
                       ) : (
@@ -175,10 +180,10 @@ export function ServicesSection({
                     <button
                       type="button"
                       onClick={() => onRequestServiceQuote(service.title)}
-                      aria-label={`Request a quote for ${service.title}`}
+                      aria-label={`${servicesSection.requestQuote}: ${service.title}`}
                       className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[var(--bg-primary)] border border-[var(--border-subtle)] text-xs font-semibold text-[var(--text-secondary)] group-hover:border-[var(--accent-border)] group-hover:text-[var(--accent)] hover:bg-[var(--accent-soft)] transition-colors cursor-pointer whitespace-nowrap shrink-0"
                     >
-                      <span>Request Quote</span>
+                      <span>{servicesSection.requestQuote}</span>
                       <ArrowRight
                         className="w-3.5 h-3.5 transition-transform duration-200 group-hover:translate-x-0.5"
                         aria-hidden="true"

@@ -12,18 +12,20 @@ import {
   TrendingUp,
 } from 'lucide-react';
 import {motion, useReducedMotion} from 'motion/react';
-import {HERO_MEDIA, TRUST_PILLARS} from '../data/companyConfig';
+import {HERO_MEDIA, I18N, LanguageCode} from '../data/companyConfig';
 import {ResilientImage} from './ResilientImage';
 
 interface HeroSectionProps {
   onStartProject: () => void;
   onViewProjects: () => void;
+  lang: LanguageCode;
 }
 
 const EASE_OUT_EXPO: [number, number, number, number] = [0.16, 1, 0.3, 1];
 
-export function HeroSection({onStartProject, onViewProjects}: HeroSectionProps) {
+export function HeroSection({onStartProject, onViewProjects, lang}: HeroSectionProps) {
   const prefersReducedMotion = useReducedMotion();
+  const {hero, trustPillars} = I18N[lang];
 
   const fadeUp = (delay = 0) => ({
     initial: prefersReducedMotion ? {opacity: 1, y: 0} : {opacity: 0, y: 18},
@@ -36,7 +38,7 @@ export function HeroSection({onStartProject, onViewProjects}: HeroSectionProps) 
   return (
     <section
       id="hero"
-      className="relative bg-[var(--bg-primary)] text-[var(--text-primary)] overflow-hidden pt-28 pb-16 lg:pt-36 lg:pb-24 border-b border-[var(--border-subtle)]"
+      className="relative bg-[var(--bg-primary)] text-[var(--text-primary)] overflow-hidden pt-24 pb-14 sm:pt-28 sm:pb-16 lg:pt-34 lg:pb-24 border-b border-[var(--border-subtle)]"
     >
       {/* Visible animated backdrop + theme-aware contrast scrim + ambient accent glow */}
       <div className="absolute inset-0 pointer-events-none">
@@ -65,63 +67,72 @@ export function HeroSection({onStartProject, onViewProjects}: HeroSectionProps) 
         />
         <div
           aria-hidden="true"
-          className="absolute top-16 left-8 w-96 h-96 rounded-full blur-[110px]"
-          style={{backgroundColor: 'var(--accent-glow)'}}
+          className="absolute inset-0 navy-grid opacity-70"
         />
         <div
           aria-hidden="true"
-          className="absolute bottom-10 right-10 w-[420px] h-[420px] rounded-full blur-[120px]"
-          style={{backgroundColor: 'var(--accent-glow)'}}
+          className="absolute -top-16 -left-20 w-80 h-80 rounded-full blur-[100px]"
+          style={{backgroundColor: 'var(--glow-violet)'}}
+        />
+        <div
+          aria-hidden="true"
+          className="absolute top-12 -right-16 w-80 h-80 rounded-full blur-[100px]"
+          style={{backgroundColor: 'var(--glow-cyan)'}}
+        />
+        <div
+          aria-hidden="true"
+          className="absolute -bottom-24 left-1/3 w-96 h-96 rounded-full blur-[110px]"
+          style={{backgroundColor: 'var(--glow-amber)'}}
         />
       </div>
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-10 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 sm:gap-12 lg:gap-10 items-center">
           {/* Left Content Column */}
           <div className="lg:col-span-7 text-left">
-            <motion.div {...fadeUp(0)} className="flex items-center gap-3 mb-6">
-              <span className="h-px w-8 bg-[var(--accent)]" aria-hidden="true" />
-              <span className="text-[11px] font-mono font-bold tracking-[0.2em] uppercase text-[var(--accent)]">
-                Business IT, Cloud &amp; Full-Stack SaaS
+            <motion.div {...fadeUp(0)} className="flex items-center gap-3 mb-4 sm:mb-6">
+              <span className="h-px w-7 sm:w-8 bg-[var(--accent)]" aria-hidden="true" />
+              <span className="text-[11px] sm:text-xs font-mono font-bold tracking-[0.18em] uppercase text-[var(--accent)]">
+                {hero.eyebrow}
               </span>
             </motion.div>
 
             <motion.h1
               {...fadeUp(0.08)}
-              className="font-extrabold tracking-tight text-[var(--text-primary)] leading-[1.06]"
+              className="font-extrabold tracking-tight text-[var(--text-primary)] leading-[1.08]"
               style={{
-                fontSize: 'clamp(2.4rem, 4.4vw, 3.85rem)',
+                fontSize: 'clamp(1.95rem, 4.2vw, 3.65rem)',
                 textWrap: 'balance',
               }}
             >
-              Transforming Businesses Through{' '}
+              {hero.titlePrefix}{' '}
               <span
                 className="bg-clip-text text-transparent"
                 style={{
-                  backgroundImage:
-                    'linear-gradient(90deg, var(--accent), var(--accent-deep))',
+                  backgroundImage: 'var(--blend-gradient)',
                 }}
               >
-                Smart Technology
+                {hero.titleHighlight}
               </span>
             </motion.h1>
 
             <motion.p
               {...fadeUp(0.16)}
-              className="mt-6 text-base sm:text-lg text-[var(--text-secondary)] leading-relaxed max-w-xl"
+              className="mt-4 sm:mt-6 text-[15px] sm:text-base lg:text-[17px] text-[var(--text-secondary)] leading-relaxed max-w-xl"
             >
-              From full-stack SaaS web applications and cloud hosting to secure office networks and
-              CCTV systems, we help companies build, launch, and manage technology that runs smoothly
-              every day.
+              {hero.subtitle}
             </motion.p>
 
-            <motion.div {...fadeUp(0.24)} className="mt-9 flex flex-wrap items-center gap-4">
+            <motion.div
+              {...fadeUp(0.24)}
+              className="mt-7 sm:mt-9 flex flex-col sm:flex-row sm:flex-wrap items-stretch sm:items-center gap-3 sm:gap-4"
+            >
               <button
                 type="button"
                 onClick={onStartProject}
-                className="group inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-[var(--accent-contrast)] font-bold text-sm transition-all duration-200 hover:-translate-y-0.5 whitespace-nowrap shrink-0 shadow-lg cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
+                className="group inline-flex items-center justify-center gap-2 px-6 sm:px-7 py-3.5 rounded-xl bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-[var(--accent-contrast)] font-bold text-sm transition-all duration-200 hover:-translate-y-0.5 whitespace-nowrap shrink-0 shadow-lg cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
               >
-                <span>Start Your Project</span>
+                <span>{hero.primaryCta}</span>
                 <ArrowRight
                   className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-1"
                   aria-hidden="true"
@@ -131,34 +142,34 @@ export function HeroSection({onStartProject, onViewProjects}: HeroSectionProps) 
               <button
                 type="button"
                 onClick={onViewProjects}
-                className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl border border-[var(--border-subtle)] hover:border-[var(--accent)] bg-[var(--bg-surface)] hover:bg-[var(--accent-soft)] text-[var(--accent)] font-bold text-sm transition-all duration-200 whitespace-nowrap shrink-0 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
+                className="inline-flex items-center justify-center gap-2 px-6 sm:px-7 py-3.5 rounded-xl border border-[var(--border-subtle)] hover:border-[var(--accent)] bg-[var(--bg-surface)] hover:bg-[var(--accent-soft)] text-[var(--accent)] font-bold text-sm transition-all duration-200 whitespace-nowrap shrink-0 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
               >
-                <span>View Sample Work</span>
+                <span>{hero.secondaryCta}</span>
                 <ArrowUpRight className="w-4 h-4" aria-hidden="true" />
               </button>
             </motion.div>
 
             <motion.div
               {...fadeUp(0.3)}
-              className="mt-10 pt-6 border-t border-[var(--border-subtle)] flex flex-wrap items-center gap-x-5 gap-y-2 text-xs font-mono text-[var(--text-muted)]"
+              className="mt-8 sm:mt-10 pt-5 sm:pt-6 border-t border-[var(--border-subtle)] flex flex-wrap items-center gap-x-4 sm:gap-x-5 gap-y-2 text-xs sm:text-[13px] font-mono text-[var(--text-muted)]"
             >
-              <span className="text-[var(--text-secondary)]">Companies &amp; Startups</span>
+              <span className="text-[var(--text-secondary)]">{hero.audiences[0]}</span>
               <span aria-hidden="true">·</span>
-              <span className="text-[var(--text-secondary)]">Institutions &amp; Schools</span>
+              <span className="text-[var(--text-secondary)]">{hero.audiences[1]}</span>
               <span aria-hidden="true">·</span>
-              <span className="text-[var(--accent)] font-semibold">Ghana &amp; Remote Delivery</span>
+              <span className="text-[var(--accent)] font-semibold">{hero.audiences[2]}</span>
             </motion.div>
           </div>
 
           {/* Right Animated Product Showcase (Reference Orbital Layout) */}
           <motion.div {...fadeUp(0.18)} className="lg:col-span-5">
-            <div className="relative w-full h-[380px] sm:h-[440px] lg:h-[480px] flex items-center justify-center select-none">
+            <div className="relative w-full h-[350px] sm:h-[420px] lg:h-[470px] flex items-center justify-center select-none">
               {/* Central Styled Orbital & Glass SaaS Showcase */}
               <motion.div
                 initial={prefersReducedMotion ? {scale: 1, opacity: 1} : {scale: 0.9, opacity: 0}}
                 animate={{scale: 1, opacity: 1}}
                 transition={prefersReducedMotion ? {duration: 0} : {duration: 0.85, ease: EASE_OUT_EXPO}}
-                className="relative w-[304px] h-[304px] sm:w-[368px] sm:h-[368px] flex items-center justify-center"
+                className="relative w-[256px] h-[256px] sm:w-[336px] sm:h-[336px] xl:w-[368px] xl:h-[368px] flex items-center justify-center"
               >
                 {/* Sweeping Conic Gradient Halo */}
                 <motion.div
@@ -168,7 +179,7 @@ export function HeroSection({onStartProject, onViewProjects}: HeroSectionProps) 
                   className="absolute inset-2 rounded-full opacity-60 blur-xl pointer-events-none"
                   style={{
                     background:
-                      'conic-gradient(from 0deg, var(--accent), transparent 32%, var(--accent-deep) 64%, transparent 92%)',
+                      'conic-gradient(from 0deg, var(--accent), transparent 28%, var(--accent-deep) 56%, var(--accent-amber) 78%, transparent 94%)',
                   }}
                 />
 
@@ -190,7 +201,7 @@ export function HeroSection({onStartProject, onViewProjects}: HeroSectionProps) 
                     strokeDasharray="8 10"
                   />
                   <circle cx="180" cy="12" r="5" fill="var(--accent)" />
-                  <circle cx="180" cy="348" r="4" fill="var(--accent-deep)" />
+                  <circle cx="180" cy="348" r="4.5" fill="var(--accent-amber)" />
                 </motion.svg>
 
                 {/* Counter-Rotating Inner Segmented Arc */}
@@ -215,7 +226,7 @@ export function HeroSection({onStartProject, onViewProjects}: HeroSectionProps) 
 
                 {/* Central Cloud & Precision Settings Gear Engine */}
                 <div
-                  className="relative z-10 w-48 h-48 sm:w-56 sm:h-56 rounded-full border border-[var(--accent-border)] bg-[var(--bg-surface)]/90 backdrop-blur-md flex flex-col items-center justify-center overflow-hidden"
+                  className="relative z-10 w-40 h-40 sm:w-52 sm:h-52 xl:w-56 xl:h-56 rounded-full border border-[var(--accent-border)] bg-[var(--bg-surface)]/90 backdrop-blur-md flex flex-col items-center justify-center overflow-hidden"
                   style={{
                     boxShadow: 'var(--shadow-card), inset 0 0 36px var(--accent-soft)',
                   }}
@@ -237,7 +248,7 @@ export function HeroSection({onStartProject, onViewProjects}: HeroSectionProps) 
                       aria-hidden="true"
                       animate={{scale: [0.65, 1.38], opacity: [0.55, 0]}}
                       transition={{duration: 2.6, repeat: Infinity, ease: 'easeOut'}}
-                      className="absolute w-36 h-36 rounded-full border border-[var(--accent)] pointer-events-none"
+                      className="absolute w-28 h-28 sm:w-36 sm:h-36 rounded-full border border-[var(--accent)] pointer-events-none"
                     />
                   )}
 
@@ -246,25 +257,25 @@ export function HeroSection({onStartProject, onViewProjects}: HeroSectionProps) 
                     aria-hidden="true"
                     className="absolute inset-0 flex items-center justify-center pointer-events-none"
                   >
-                    <div className="-translate-x-8 -translate-y-6">
+                    <div className="-translate-x-6 -translate-y-5 sm:-translate-x-8 sm:-translate-y-6">
                       <motion.div
                         animate={prefersReducedMotion ? undefined : {rotate: 360}}
                         transition={{duration: 9, repeat: Infinity, ease: 'linear'}}
                       >
                         <Settings
                           strokeWidth={1.6}
-                          className="w-28 h-28 sm:w-32 sm:h-32 text-[var(--accent)]/50"
+                          className="w-24 h-24 sm:w-28 sm:h-28 xl:w-32 xl:h-32 text-[var(--accent)]/50"
                         />
                       </motion.div>
                     </div>
-                    <div className="translate-x-8 translate-y-5">
+                    <div className="translate-x-6 translate-y-4 sm:translate-x-8 sm:translate-y-5">
                       <motion.div
                         animate={prefersReducedMotion ? undefined : {rotate: -360}}
                         transition={{duration: 6, repeat: Infinity, ease: 'linear'}}
                       >
                         <Settings
                           strokeWidth={1.75}
-                          className="w-16 h-16 sm:w-[72px] sm:h-[72px] text-[var(--accent-deep)]/65"
+                          className="w-14 h-14 sm:w-16 sm:h-16 xl:w-[72px] xl:h-[72px] text-[var(--accent-deep)]/65"
                         />
                       </motion.div>
                     </div>
@@ -283,7 +294,7 @@ export function HeroSection({onStartProject, onViewProjects}: HeroSectionProps) 
                     <svg
                       viewBox="0 0 160 104"
                       aria-hidden="true"
-                      className="w-28 h-20 sm:w-36 sm:h-24"
+                      className="w-24 h-16 sm:w-32 sm:h-20 xl:w-36 xl:h-24"
                       style={{
                         filter: 'drop-shadow(0 12px 24px var(--accent-glow))',
                       }}
@@ -291,8 +302,8 @@ export function HeroSection({onStartProject, onViewProjects}: HeroSectionProps) 
                       <defs>
                         <linearGradient id="skymaxCloudGrad" x1="0%" y1="0%" x2="100%" y2="100%">
                           <stop offset="0%" stopColor="var(--accent)" />
-                          <stop offset="55%" stopColor="var(--accent)" />
-                          <stop offset="100%" stopColor="var(--accent-deep)" />
+                          <stop offset="56%" stopColor="var(--accent-deep)" />
+                          <stop offset="100%" stopColor="var(--accent-amber)" />
                         </linearGradient>
                         <linearGradient id="skymaxCloudSheen" x1="0%" y1="0%" x2="0%" y2="100%">
                           <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.35" />
@@ -382,7 +393,7 @@ export function HeroSection({onStartProject, onViewProjects}: HeroSectionProps) 
                         }`}
                       />
                       <span className="font-mono text-[9px] font-bold tracking-[0.18em] text-[var(--text-primary)] uppercase">
-                        Cloud Engine
+                        {hero.cloudEngineLabel}
                       </span>
                     </div>
                   </motion.div>
@@ -398,21 +409,21 @@ export function HeroSection({onStartProject, onViewProjects}: HeroSectionProps) 
                   transition={
                     prefersReducedMotion ? {duration: 0} : {duration: 0.7, delay: 0.35, ease: EASE_OUT_EXPO}
                   }
-                  className="absolute top-3 right-1 sm:right-3 p-3.5 sm:p-4 rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-surface)]/95 backdrop-blur-md"
+                  className="absolute top-2 right-0 sm:top-3 sm:right-2 p-2.5 sm:p-3.5 rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-surface)]/95 backdrop-blur-md"
                   style={{boxShadow: 'var(--shadow-card)'}}
                 >
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-1.5 sm:gap-2">
                     <span className="relative flex h-2 w-2">
                       {!prefersReducedMotion && (
                         <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--accent)] opacity-75" />
                       )}
                       <span className="relative inline-flex rounded-full h-2 w-2 bg-[var(--accent)]" />
                     </span>
-                    <p className="text-[10px] font-mono tracking-widest uppercase text-[var(--text-secondary)] font-semibold">
-                      Cloud Compute
+                    <p className="text-[10px] font-mono tracking-wider uppercase text-[var(--text-secondary)] font-semibold">
+                      {hero.cloudComputeLabel}
                     </p>
                   </div>
-                  <div className="mt-2.5 h-8 w-24 flex items-end gap-1">
+                  <div className="mt-2 h-6 sm:h-8 w-20 sm:w-24 flex items-end gap-1">
                     {[40, 75, 45, 90, 60, 50, 85, 95].map((heightPct, barIdx) => (
                       <motion.div
                         key={barIdx}
@@ -426,10 +437,11 @@ export function HeroSection({onStartProject, onViewProjects}: HeroSectionProps) 
                           repeat: Infinity,
                           ease: 'easeInOut',
                         }}
-                        className="w-2.5 rounded-t-sm origin-bottom"
+                        className="w-2 sm:w-2.5 rounded-t-sm origin-bottom"
                         style={{
                           height: `${heightPct}%`,
-                          background: 'linear-gradient(to top, var(--accent-deep), var(--accent))',
+                          background:
+                            'linear-gradient(to top, var(--accent-deep), var(--accent))',
                         }}
                       />
                     ))}
@@ -439,39 +451,39 @@ export function HeroSection({onStartProject, onViewProjects}: HeroSectionProps) 
                 {/* Floating Product Cards */}
                 {[
                   {
-                    label: 'Full-Stack SaaS',
+                    label: hero.floatingProducts[0],
                     Icon: Code2,
-                    pos: 'top-[15%] left-0 sm:left-[-2%]',
+                    pos: 'top-[12%] left-0 sm:left-2 lg:left-[-2%]',
                     delay: 0,
-                    dir: -10,
+                    dir: -8,
                   },
                   {
-                    label: 'Cloud Hosting',
+                    label: hero.floatingProducts[1],
                     Icon: Cloud,
-                    pos: 'top-[65%] left-0 sm:left-[-4%]',
+                    pos: 'bottom-[14%] left-0 sm:left-2 lg:left-[-3%]',
                     delay: 1.2,
-                    dir: 10,
+                    dir: 8,
                   },
                   {
-                    label: 'Office Networks',
+                    label: hero.floatingProducts[2],
                     Icon: Network,
-                    pos: 'top-[48%] right-0 sm:right-[-4%]',
+                    pos: 'top-[48%] right-0 sm:right-1 lg:right-[-3%]',
                     delay: 2.4,
-                    dir: -10,
+                    dir: -8,
                   },
                   {
-                    label: 'CCTV & Security',
+                    label: hero.floatingProducts[3],
                     Icon: ShieldCheck,
-                    pos: 'bottom-[8%] right-2 sm:right-[4%]',
+                    pos: 'bottom-[5%] right-0 sm:right-4',
                     delay: 3.6,
-                    dir: 10,
+                    dir: 8,
                   },
-                ].map((product) => {
+                ].map((product, idx) => {
                   const ProductIcon = product.Icon;
                   return (
                     <motion.div
-                      key={product.label}
-                      className={`absolute ${product.pos} flex items-center gap-2 px-3.5 py-2.5 rounded-xl border border-[var(--border-subtle)] hover:border-[var(--accent-border)] bg-[var(--bg-surface)]/95 backdrop-blur-md`}
+                      key={idx}
+                      className={`absolute ${product.pos} flex items-center gap-1.5 sm:gap-2 px-2.5 py-1.5 sm:px-3.5 sm:py-2 rounded-xl border border-[var(--border-subtle)] hover:border-[var(--accent-border)] bg-[var(--bg-surface)]/95 backdrop-blur-md`}
                       style={{boxShadow: 'var(--shadow-card)'}}
                       animate={prefersReducedMotion ? undefined : {y: [0, product.dir, 0]}}
                       transition={{
@@ -487,7 +499,7 @@ export function HeroSection({onStartProject, onViewProjects}: HeroSectionProps) 
                         }`}
                         aria-hidden="true"
                       />
-                      <span className="font-semibold text-[11px] tracking-wide whitespace-nowrap text-[var(--text-primary)]">
+                      <span className="font-semibold text-[11px] sm:text-xs tracking-wide whitespace-nowrap text-[var(--text-primary)]">
                         {product.label}
                       </span>
                     </motion.div>
@@ -501,9 +513,9 @@ export function HeroSection({onStartProject, onViewProjects}: HeroSectionProps) 
         {/* Full-width 4-column Trust Pillars Strip */}
         <motion.div
           {...fadeUp(0.34)}
-          className="mt-14 pt-10 border-t border-[var(--border-subtle)] grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5"
+          className="mt-10 sm:mt-14 pt-8 sm:pt-10 border-t border-[var(--border-subtle)] grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5"
         >
-          {TRUST_PILLARS.map((pillar, idx) => {
+          {trustPillars.map((pillar, idx) => {
             const PillarIcon = [Layers, Lock, TrendingUp, BookOpenCheck][idx] ?? Layers;
             return (
               <motion.div
@@ -517,7 +529,7 @@ export function HeroSection({onStartProject, onViewProjects}: HeroSectionProps) 
                   aria-hidden="true"
                   className="absolute top-0 left-0 right-0 h-0.5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                   style={{
-                    background: 'linear-gradient(90deg, var(--accent), var(--accent-deep))',
+                    background: 'var(--blend-gradient)',
                   }}
                 />
                 <div className="flex items-center justify-between">
@@ -528,10 +540,10 @@ export function HeroSection({onStartProject, onViewProjects}: HeroSectionProps) 
                     {pillar.index}.
                   </span>
                 </div>
-                <h2 className="mt-3.5 text-sm font-bold text-[var(--text-primary)] group-hover:text-[var(--accent)] transition-colors">
+                <h2 className="mt-3.5 text-base font-bold text-[var(--text-primary)] group-hover:text-[var(--accent)] transition-colors">
                   {pillar.title}
                 </h2>
-                <p className="mt-1.5 text-xs text-[var(--text-secondary)] leading-relaxed">
+                <p className="mt-1.5 text-sm text-[var(--text-secondary)] leading-relaxed">
                   {pillar.detail}
                 </p>
               </motion.div>

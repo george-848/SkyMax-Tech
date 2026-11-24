@@ -1,18 +1,20 @@
 import {useEffect} from 'react';
 import {ArrowRight, Check, MessageCircle, X} from 'lucide-react';
 import {AnimatePresence, motion, useReducedMotion} from 'motion/react';
-import {COMPANY_INFO, ProjectItem, ServiceItem} from '../data/companyConfig';
+import {COMPANY_INFO, I18N, LanguageCode, ProjectItem, ServiceItem} from '../data/companyConfig';
 import {MODERN_EASE} from './MotionPrimitives';
 import {ResilientImage} from './ResilientImage';
 
 interface ServiceModalProps {
+  lang: LanguageCode;
   service: ServiceItem | null;
   onClose: () => void;
   onRequestQuote: (serviceTitle: string) => void;
 }
 
-export function ServiceDetailModal({service, onClose, onRequestQuote}: ServiceModalProps) {
+export function ServiceDetailModal({lang, service, onClose, onRequestQuote}: ServiceModalProps) {
   const prefersReducedMotion = useReducedMotion();
+  const copy = I18N[lang].modals;
 
   useEffect(() => {
     if (!service) return;
@@ -51,7 +53,9 @@ export function ServiceDetailModal({service, onClose, onRequestQuote}: ServiceMo
           >
             <div className="sticky top-0 z-10 bg-[var(--bg-primary)]/95 backdrop-blur-md px-6 py-5 flex items-start justify-between gap-4 border-b border-[var(--border-subtle)]">
               <div>
-                <p className="text-xs font-mono text-[var(--accent)]">Service {service.number}</p>
+                <p className="text-xs font-mono text-[var(--accent)]">
+                  {copy.servicePrefix} {service.number}
+                </p>
                 <h3
                   id="service-modal-title"
                   className="mt-1 text-xl sm:text-2xl font-bold text-[var(--text-primary)]"
@@ -62,14 +66,14 @@ export function ServiceDetailModal({service, onClose, onRequestQuote}: ServiceMo
               <button
                 type="button"
                 onClick={onClose}
-                aria-label="Close service details"
+                aria-label={copy.closeServiceAria}
                 className="w-9 h-9 rounded-lg bg-[var(--bg-surface)] border border-[var(--border-subtle)] hover:border-[var(--accent-border)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] flex items-center justify-center cursor-pointer shrink-0 transition-colors"
               >
                 <X className="w-4 h-4" />
               </button>
             </div>
 
-            <div className="p-6 sm:p-8 space-y-6 text-left">
+            <div className="p-5 sm:p-8 space-y-5 sm:space-y-6 text-left">
               {service.callout && (
                 <p className="text-sm font-bold text-[var(--accent)]">{service.callout}</p>
               )}
@@ -79,13 +83,13 @@ export function ServiceDetailModal({service, onClose, onRequestQuote}: ServiceMo
 
               <div>
                 <h4 className="text-xs font-mono uppercase tracking-[0.18em] text-[var(--accent)] font-bold">
-                  What Is Included
+                  {copy.whatIsIncluded}
                 </h4>
                 <ul className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                   {service.capabilities.map((cap) => (
                     <li
                       key={cap}
-                      className="flex items-start gap-2 text-xs sm:text-sm text-[var(--text-primary)]"
+                      className="flex items-start gap-2 text-sm text-[var(--text-primary)]"
                     >
                       <Check
                         className="w-4 h-4 text-[var(--accent)] shrink-0 mt-0.5"
@@ -99,7 +103,7 @@ export function ServiceDetailModal({service, onClose, onRequestQuote}: ServiceMo
 
               <div className="pt-5 border-t border-[var(--border-subtle)]">
                 <h4 className="text-xs font-mono uppercase tracking-[0.18em] text-[var(--accent)] font-bold">
-                  What You Receive
+                  {copy.whatYouReceive}
                 </h4>
                 <ul className="mt-3 space-y-2">
                   {service.deliverables.map((item) => (
@@ -126,20 +130,20 @@ export function ServiceDetailModal({service, onClose, onRequestQuote}: ServiceMo
                   }}
                   className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-[var(--accent-contrast)] text-xs font-bold uppercase tracking-wider transition-colors cursor-pointer"
                 >
-                  <span>Request a Quote</span>
+                  <span>{copy.requestQuote}</span>
                   <ArrowRight className="w-4 h-4" aria-hidden="true" />
                 </button>
 
                 <a
                   href={`${COMPANY_INFO.whatsappLink}?text=${encodeURIComponent(
-                    `Hello, I would like to enquire about ${service.title}.`
+                    `${copy.whatsappEnquiryPrefix} ${service.title}.`
                   )}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 px-4 py-3 rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-primary)] text-xs font-semibold text-[var(--text-primary)] hover:border-[var(--accent-border)] transition-colors"
                 >
                   <MessageCircle className="w-4 h-4 text-[var(--accent)]" aria-hidden="true" />
-                  <span>Discuss on WhatsApp</span>
+                  <span>{copy.discussWhatsApp}</span>
                 </a>
               </div>
             </div>
@@ -151,17 +155,22 @@ export function ServiceDetailModal({service, onClose, onRequestQuote}: ServiceMo
 }
 
 interface ProjectModalProps {
+  lang: LanguageCode;
   project: ProjectItem | null;
   onClose: () => void;
   onRequestSimilar: (categoryTitle: string) => void;
 }
 
 export function ProjectDetailModal({
+  lang,
   project,
   onClose,
   onRequestSimilar,
 }: ProjectModalProps) {
   const prefersReducedMotion = useReducedMotion();
+  const locale = I18N[lang];
+  const copy = locale.modals;
+  const localizedCategory = project ? locale.projectsSection.categoryLabels[project.category] : '';
 
   useEffect(() => {
     if (!project) return;
@@ -212,7 +221,7 @@ export function ProjectDetailModal({
               <button
                 type="button"
                 onClick={onClose}
-                aria-label="Close project details"
+                aria-label={copy.closeProjectAria}
                 className="absolute top-4 right-4 w-9 h-9 rounded-lg bg-black/70 hover:bg-black text-white flex items-center justify-center cursor-pointer border border-white/20 transition-colors"
               >
                 <X className="w-4 h-4" />
@@ -230,11 +239,11 @@ export function ProjectDetailModal({
               </div>
             </div>
 
-            <div className="p-6 sm:p-8 space-y-6 text-left">
+            <div className="p-5 sm:p-8 space-y-5 sm:space-y-6 text-left">
               <div className="flex items-center gap-2 text-xs font-mono text-[var(--text-muted)]">
-                <span className="text-[var(--accent)] font-semibold">{project.category}</span>
+                <span className="text-[var(--accent)] font-semibold">{localizedCategory}</span>
                 <span aria-hidden="true">·</span>
-                <span>Sample Setup</span>
+                <span>{copy.sampleSetupTag}</span>
               </div>
 
               <p className="text-sm sm:text-base text-[var(--text-secondary)] leading-relaxed">
@@ -243,13 +252,13 @@ export function ProjectDetailModal({
 
               <div>
                 <h4 className="text-xs font-mono uppercase tracking-[0.18em] text-[var(--accent)] font-bold">
-                  Key Features
+                  {copy.keyFeatures}
                 </h4>
                 <ul className="mt-3 space-y-2.5">
                   {project.architectureHighlights.map((point) => (
                     <li
                       key={point}
-                      className="flex items-start gap-2.5 text-xs sm:text-sm text-[var(--text-primary)]"
+                      className="flex items-start gap-2.5 text-sm text-[var(--text-primary)]"
                     >
                       <Check
                         className="w-4 h-4 text-[var(--accent)] shrink-0 mt-0.5"
@@ -262,7 +271,7 @@ export function ProjectDetailModal({
               </div>
 
               <div className="pt-4 border-t border-[var(--border-subtle)]">
-                <h4 className="text-xs font-mono text-[var(--text-muted)]">Tools Used</h4>
+                <h4 className="text-xs font-mono text-[var(--text-muted)]">{copy.toolsUsed}</h4>
                 <p className="mt-1.5 text-xs sm:text-sm font-mono text-[var(--text-primary)]">
                   {project.technologies.join(' · ')}
                 </p>
@@ -273,11 +282,11 @@ export function ProjectDetailModal({
                   type="button"
                   onClick={() => {
                     onClose();
-                    onRequestSimilar('Multiple / Integrated Solution');
+                    onRequestSimilar(locale.contact.extraServiceOptions.integrated);
                   }}
                   className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-[var(--accent-contrast)] text-xs font-bold uppercase tracking-wider transition-colors cursor-pointer"
                 >
-                  <span>Request a Setup Like This</span>
+                  <span>{copy.requestSimilar}</span>
                   <ArrowRight className="w-4 h-4" aria-hidden="true" />
                 </button>
 
@@ -286,7 +295,7 @@ export function ProjectDetailModal({
                   onClick={onClose}
                   className="px-4 py-3 rounded-xl border border-[var(--border-subtle)] text-xs font-semibold text-[var(--text-secondary)] hover:text-[var(--text-primary)] cursor-pointer"
                 >
-                  Close
+                  {copy.closeBtn}
                 </button>
               </div>
             </div>
@@ -298,12 +307,14 @@ export function ProjectDetailModal({
 }
 
 interface LegalModalProps {
+  lang: LanguageCode;
   docType: 'privacy' | 'terms' | null;
   onClose: () => void;
 }
 
-export function LegalModal({docType, onClose}: LegalModalProps) {
+export function LegalModal({lang, docType, onClose}: LegalModalProps) {
   const prefersReducedMotion = useReducedMotion();
+  const copy = I18N[lang].modals;
 
   useEffect(() => {
     if (!docType) return;
@@ -315,6 +326,7 @@ export function LegalModal({docType, onClose}: LegalModalProps) {
   }, [docType, onClose]);
 
   const isPrivacy = docType === 'privacy';
+  const paragraphs = isPrivacy ? copy.privacyParagraphs : copy.termsParagraphs;
 
   return (
     <AnimatePresence>
@@ -344,12 +356,12 @@ export function LegalModal({docType, onClose}: LegalModalProps) {
           >
             <div className="flex items-center justify-between gap-4 pb-4 border-b border-[var(--border-subtle)]">
               <h3 id="legal-modal-title" className="text-xl font-bold text-[var(--text-primary)]">
-                {isPrivacy ? 'Privacy Policy' : 'Terms and Conditions'}
+                {isPrivacy ? copy.privacyTitle : copy.termsTitle}
               </h3>
               <button
                 type="button"
                 onClick={onClose}
-                aria-label="Close legal notice"
+                aria-label={copy.closeLegalAria}
                 className="w-9 h-9 rounded-lg bg-[var(--bg-primary)] border border-[var(--border-subtle)] hover:border-[var(--accent-border)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] flex items-center justify-center cursor-pointer transition-colors"
               >
                 <X className="w-4 h-4" />
@@ -357,37 +369,9 @@ export function LegalModal({docType, onClose}: LegalModalProps) {
             </div>
 
             <div className="mt-5 space-y-4 text-sm text-[var(--text-secondary)] leading-relaxed">
-              {isPrivacy ? (
-                <>
-                  <p>
-                    {COMPANY_INFO.name} respects your privacy. This static business website does
-                    not store enquiry form submissions in a background database or sell visitor
-                    information to third parties.
-                  </p>
-                  <p>
-                    Information you enter into the enquiry form is validated locally in your browser
-                    so you can choose to transmit your project brief directly via WhatsApp or your
-                    own email application.
-                  </p>
-                  <p>
-                    For privacy questions, contact us at {COMPANY_INFO.emailPlaceholder} or{' '}
-                    {COMPANY_INFO.whatsappInternational}.
-                  </p>
-                </>
-              ) : (
-                <>
-                  <p>
-                    Content on this website is provided by {COMPANY_INFO.name} for general
-                    informational purposes regarding our IT, software, cloud, networking, and
-                    physical security services.
-                  </p>
-                  <p>
-                    Sample architectures displayed in the Projects section are demonstration
-                    blueprints for scoping discussions. Final project deliverables, timelines,
-                    warranties, and service-level terms are defined in written client proposals.
-                  </p>
-                </>
-              )}
+              {paragraphs.map((paragraph, idx) => (
+                <p key={idx}>{paragraph}</p>
+              ))}
             </div>
 
             <div className="mt-6 pt-4 border-t border-[var(--border-subtle)] flex justify-end">
@@ -396,7 +380,7 @@ export function LegalModal({docType, onClose}: LegalModalProps) {
                 onClick={onClose}
                 className="px-5 py-2.5 rounded-xl bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-[var(--accent-contrast)] text-xs font-bold uppercase tracking-wider cursor-pointer transition-colors"
               >
-                Close
+                {copy.closeBtn}
               </button>
             </div>
           </motion.div>

@@ -7,56 +7,68 @@
 }
 
 /* ==========================================================================
-   Theme 1: Cobalt Slate (Default Dark)
+   Theme 1: Navy Prism (Default Dark — Deep Navy + Cyan / Violet / Amber Blend)
    ========================================================================== */
 :root,
 :root[data-theme="cobalt-slate"] {
   color-scheme: dark;
-  --bg-primary: #070B14;
-  --bg-secondary: #0C1322;
-  --bg-surface: #111A2E;
-  --bg-surface-hover: #17233D;
-  --bg-input: #070B14;
-  --border-subtle: #1E293B;
-  --text-primary: #F8FAFC;
-  --text-secondary: #94A3B8;
-  --text-muted: #64748B;
-  --accent: #38BDF8;
-  --accent-hover: #7DD3FC;
-  --accent-deep: #2563EB;
-  --accent-contrast: #070B14;
-  --accent-soft: rgba(56, 189, 248, 0.12);
-  --accent-border: rgba(56, 189, 248, 0.32);
-  --accent-glow: rgba(56, 189, 248, 0.08);
-  --accent-on-photo: #38BDF8;
+  --bg-primary: #0B1B33;
+  --bg-secondary: #081426;
+  --bg-surface: #0E1F3B;
+  --bg-surface-hover: #142A4F;
+  --bg-input: #060F1E;
+  --border-subtle: #252D46;
+  --text-primary: #F4F6FA;
+  --text-secondary: #9BA6BF;
+  --text-muted: #6E7C99;
+  --accent: #28E1F6;
+  --accent-hover: #67E8F9;
+  --accent-deep: #8C5DF8;
+  --accent-amber: #FAB338;
+  --accent-contrast: #040611;
+  --accent-soft: rgba(140, 93, 248, 0.14);
+  --accent-border: rgba(40, 225, 246, 0.34);
+  --accent-glow: rgba(140, 93, 248, 0.22);
+  --glow-cyan: rgba(40, 225, 246, 0.22);
+  --glow-violet: rgba(140, 93, 248, 0.28);
+  --glow-amber: rgba(250, 179, 56, 0.16);
+  --blend-gradient: linear-gradient(100deg, #28E1F6, #8C5DF8 55%, #FAB338);
+  --blend-gradient-duo: linear-gradient(135deg, #8C5DF8, #28E1F6);
+  --accent-on-photo: #28E1F6;
   --hero-img-opacity: 0.36;
-  --shadow-card: 0 20px 45px -24px rgba(0, 0, 0, 0.85);
+  --shadow-card: 0 20px 45px -24px rgba(4, 6, 17, 0.9);
 }
 
 /* ==========================================================================
-   Theme 2: Nordic Daylight (Clean Light)
+   Theme 2: Nordic Daylight (Clean Light + Cobalt / Violet / Amber Blend)
    ========================================================================== */
 :root[data-theme="nordic-daylight"] {
   color-scheme: light;
   --bg-primary: #FFFFFF;
-  --bg-secondary: #F4F7FB;
+  --bg-secondary: #F7F9FC;
   --bg-surface: #FFFFFF;
-  --bg-surface-hover: #F1F5F9;
-  --bg-input: #F8FAFC;
-  --border-subtle: #E2E8F0;
-  --text-primary: #0F172A;
-  --text-secondary: #475569;
+  --bg-surface-hover: #EFF4FF;
+  --bg-input: #F7F9FC;
+  --border-subtle: #E6ECF5;
+  --text-primary: #0B1B33;
+  --text-secondary: #334155;
   --text-muted: #64748B;
   --accent: #1D4ED8;
-  --accent-hover: #1E40AF;
-  --accent-deep: #0284C7;
+  --accent-hover: #1A45BD;
+  --accent-deep: #7C3AED;
+  --accent-amber: #D97706;
   --accent-contrast: #FFFFFF;
   --accent-soft: rgba(29, 78, 216, 0.08);
-  --accent-border: rgba(29, 78, 216, 0.25);
-  --accent-glow: rgba(29, 78, 216, 0.06);
-  --accent-on-photo: #60A5FA;
+  --accent-border: rgba(140, 93, 248, 0.28);
+  --accent-glow: rgba(29, 78, 216, 0.08);
+  --glow-cyan: rgba(40, 225, 246, 0.14);
+  --glow-violet: rgba(140, 93, 248, 0.12);
+  --glow-amber: rgba(245, 158, 11, 0.1);
+  --blend-gradient: linear-gradient(100deg, #1D4ED8, #7C3AED 55%, #D97706);
+  --blend-gradient-duo: linear-gradient(135deg, #7C3AED, #0EA5E9);
+  --accent-on-photo: #6BA0FF;
   --hero-img-opacity: 0.2;
-  --shadow-card: 0 12px 32px -18px rgba(15, 23, 42, 0.14);
+  --shadow-card: 0 12px 32px -18px rgba(11, 27, 51, 0.12);
 }
 
 /* ==========================================================================
@@ -73,14 +85,20 @@
   --text-primary: #FAFAFA;
   --text-secondary: #A1A1AA;
   --text-muted: #71717A;
-  --accent: #F59E0B;
+  --accent: #FAB338;
   --accent-hover: #FBBF24;
-  --accent-deep: #D97706;
+  --accent-deep: #8C5DF8;
+  --accent-amber: #28E1F6;
   --accent-contrast: #09090B;
-  --accent-soft: rgba(245, 158, 11, 0.12);
-  --accent-border: rgba(245, 158, 11, 0.32);
-  --accent-glow: rgba(245, 158, 11, 0.08);
-  --accent-on-photo: #FBBF24;
+  --accent-soft: rgba(250, 179, 56, 0.12);
+  --accent-border: rgba(250, 179, 56, 0.34);
+  --accent-glow: rgba(250, 179, 56, 0.12);
+  --glow-cyan: rgba(40, 225, 246, 0.12);
+  --glow-violet: rgba(140, 93, 248, 0.16);
+  --glow-amber: rgba(250, 179, 56, 0.18);
+  --blend-gradient: linear-gradient(100deg, #FAB338, #8C5DF8 55%, #28E1F6);
+  --blend-gradient-duo: linear-gradient(135deg, #FAB338, #8C5DF8);
+  --accent-on-photo: #FAB338;
   --hero-img-opacity: 0.34;
   --shadow-card: 0 20px 45px -24px rgba(0, 0, 0, 0.85);
 }
@@ -101,11 +119,17 @@
   --text-muted: #64748B;
   --accent: #0F766E;
   --accent-hover: #115E59;
-  --accent-deep: #0284C7;
+  --accent-deep: #6D28D9;
+  --accent-amber: #D97706;
   --accent-contrast: #FFFFFF;
   --accent-soft: rgba(15, 118, 110, 0.09);
   --accent-border: rgba(15, 118, 110, 0.26);
-  --accent-glow: rgba(15, 118, 110, 0.06);
+  --accent-glow: rgba(15, 118, 110, 0.08);
+  --glow-cyan: rgba(15, 118, 110, 0.1);
+  --glow-violet: rgba(109, 40, 217, 0.09);
+  --glow-amber: rgba(217, 119, 6, 0.08);
+  --blend-gradient: linear-gradient(100deg, #0F766E, #6D28D9 55%, #D97706);
+  --blend-gradient-duo: linear-gradient(135deg, #0F766E, #0284C7);
   --accent-on-photo: #2DD4BF;
   --hero-img-opacity: 0.2;
   --shadow-card: 0 12px 32px -18px rgba(15, 23, 42, 0.12);
@@ -167,4 +191,11 @@
 .animate-hero-swing {
   animation: hero-swing 12s ease-in-out infinite;
   transform-origin: center center;
+}
+
+.navy-grid {
+  background-image:
+    linear-gradient(90deg, color-mix(in srgb, var(--text-primary) 5%, transparent) 1px, transparent 1px),
+    linear-gradient(color-mix(in srgb, var(--text-primary) 5%, transparent) 1px, transparent 1px);
+  background-size: 56px 56px;
 }

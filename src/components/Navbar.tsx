@@ -1,28 +1,32 @@
 import {useEffect, useState} from 'react';
 import {ArrowUpRight, Menu, X} from 'lucide-react';
 import {AnimatePresence, motion, useReducedMotion} from 'motion/react';
-import {COMPANY_INFO, SectionId} from '../data/companyConfig';
+import {COMPANY_INFO, I18N, LanguageCode, SectionId} from '../data/companyConfig';
+import {LanguageSwitcher} from './LanguageSwitcher';
 
 interface NavbarProps {
   activeSection: SectionId;
   onNavigate: (section: SectionId) => void;
+  lang: LanguageCode;
+  onSelectLanguage: (language: LanguageCode) => void;
 }
 
-const NAV_LINKS: {id: SectionId; label: string}[] = [
-  {id: 'hero', label: 'Home'},
-  {id: 'about', label: 'About'},
-  {id: 'services', label: 'Services'},
-  {id: 'why-us', label: 'Why Us'},
-  {id: 'projects', label: 'Projects'},
-  {id: 'process', label: 'Process'},
-  {id: 'tech', label: 'Technologies'},
-  {id: 'contact', label: 'Contact'},
+const NAV_IDS: SectionId[] = [
+  'hero',
+  'about',
+  'services',
+  'why-us',
+  'projects',
+  'process',
+  'tech',
+  'contact',
 ];
 
-export function Navbar({activeSection, onNavigate}: NavbarProps) {
+export function Navbar({activeSection, onNavigate, lang, onSelectLanguage}: NavbarProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const prefersReducedMotion = useReducedMotion();
+  const t = I18N[lang].nav;
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -47,7 +51,7 @@ export function Navbar({activeSection, onNavigate}: NavbarProps) {
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div
-          className={`flex items-center justify-between gap-4 xl:gap-8 transition-all duration-300 ${
+          className={`flex items-center justify-between gap-2.5 xl:gap-6 transition-all duration-300 ${
             scrolled || mobileOpen ? 'py-3' : 'py-4 sm:py-5'
           }`}
         >
@@ -58,7 +62,7 @@ export function Navbar({activeSection, onNavigate}: NavbarProps) {
               e.preventDefault();
               handleNav('hero');
             }}
-            className="inline-flex items-center gap-2.5 text-[var(--text-primary)] font-bold text-base sm:text-lg tracking-tight whitespace-nowrap shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] rounded-md"
+            className="inline-flex items-center gap-2 sm:gap-2.5 text-[var(--text-primary)] font-bold text-[15px] sm:text-lg tracking-tight whitespace-nowrap shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] rounded-md"
             style={{fontFamily: 'var(--font-display)'}}
           >
             <svg
@@ -92,7 +96,7 @@ export function Navbar({activeSection, onNavigate}: NavbarProps) {
                 strokeLinecap="round"
                 strokeLinejoin="round"
               />
-              <rect x="42" y="38" width="7" height="7" rx="2" style={{fill: 'var(--accent)'}} />
+              <rect x="42" y="38" width="7" height="7" rx="2" style={{fill: 'var(--accent-amber)'}} />
             </svg>
             <span>{COMPANY_INFO.name}</span>
           </a>
@@ -100,44 +104,46 @@ export function Navbar({activeSection, onNavigate}: NavbarProps) {
           {/* Zone 2: Horizontal Section Menu */}
           <nav
             aria-label="Primary Navigation"
-            className="hidden lg:flex items-center gap-1 xl:gap-1.5"
+            className="hidden lg:flex items-center gap-0.5 xl:gap-1.5"
           >
-            {NAV_LINKS.map((item) => {
-              const isActive = activeSection === item.id;
+            {NAV_IDS.map((id) => {
+              const isActive = activeSection === id;
               return (
                 <a
-                  key={item.id}
-                  href={`#${item.id}`}
+                  key={id}
+                  href={`#${id}`}
                   aria-current={isActive ? 'location' : undefined}
                   onClick={(e) => {
                     e.preventDefault();
-                    handleNav(item.id);
+                    handleNav(id);
                   }}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-semibold tracking-wide transition-all duration-200 whitespace-nowrap shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] ${
+                  className={`px-2 xl:px-3 py-1.5 rounded-lg text-[12.5px] xl:text-[13px] font-semibold tracking-wide transition-all duration-200 whitespace-nowrap shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] ${
                     isActive
                       ? 'text-[var(--accent)] bg-[var(--accent-soft)] border border-[var(--accent-border)]'
                       : 'text-[var(--text-secondary)] hover:text-[var(--accent)] hover:bg-[var(--accent-soft)] border border-transparent'
                   }`}
                 >
-                  {item.label}
+                  {t[id]}
                 </a>
               );
             })}
           </nav>
 
-          {/* Zone 3: Single Primary Action + Mobile Drawer Toggle */}
-          <div className="flex items-center gap-3 shrink-0">
+          {/* Zone 3: Language Toggle, Primary Action & Mobile Drawer Toggle */}
+          <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
+            <LanguageSwitcher activeLanguage={lang} onSelectLanguage={onSelectLanguage} />
+
             <button
               type="button"
               onClick={() => handleNav('contact')}
-              className="hidden sm:inline-flex items-center justify-center px-5 py-2.5 rounded-full text-xs font-bold tracking-wide text-[var(--accent-contrast)] bg-[var(--accent)] hover:bg-[var(--accent-hover)] transition-all duration-200 hover:-translate-y-0.5 whitespace-nowrap shrink-0 shadow-md cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
+              className="hidden sm:inline-flex items-center justify-center px-3.5 xl:px-5 py-2.5 rounded-full text-xs sm:text-[13px] font-bold tracking-wide text-[var(--accent-contrast)] bg-[var(--accent)] hover:bg-[var(--accent-hover)] transition-all duration-200 hover:-translate-y-0.5 whitespace-nowrap shrink-0 shadow-md cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
             >
-              Get Consultation
+              {t.cta}
             </button>
 
             <button
               type="button"
-              aria-label={mobileOpen ? 'Close navigation menu' : 'Open navigation menu'}
+              aria-label={mobileOpen ? t.closeMenuLabel : t.openMenuLabel}
               aria-expanded={mobileOpen}
               onClick={() => setMobileOpen((prev) => !prev)}
               className="lg:hidden inline-flex items-center justify-center w-10 h-10 rounded-lg text-[var(--text-primary)] hover:bg-[var(--accent-soft)] transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
@@ -166,42 +172,44 @@ export function Navbar({activeSection, onNavigate}: NavbarProps) {
               aria-label="Mobile Navigation"
               className="max-w-7xl mx-auto px-4 pt-3 pb-6 flex flex-col gap-1"
             >
-              {NAV_LINKS.map((item) => {
-                const isActive = activeSection === item.id;
+              {NAV_IDS.map((id) => {
+                const isActive = activeSection === id;
                 return (
                   <a
-                    key={item.id}
-                    href={`#${item.id}`}
+                    key={id}
+                    href={`#${id}`}
                     onClick={(e) => {
                       e.preventDefault();
-                      handleNav(item.id);
+                      handleNav(id);
                     }}
-                    className={`px-4 py-3 rounded-xl text-sm font-semibold transition-colors ${
+                    className={`px-4 py-3 rounded-xl text-[15px] font-semibold transition-colors ${
                       isActive
                         ? 'text-[var(--accent)] bg-[var(--accent-soft)] border border-[var(--accent-border)]'
                         : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-surface)]'
                     }`}
                   >
-                    {item.label}
+                    {t[id]}
                   </a>
                 );
               })}
 
-              <div className="pt-3 mt-2 border-t border-[var(--border-subtle)] flex flex-col gap-2.5">
+              <div className="pt-3 mt-2 border-t border-[var(--border-subtle)] grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                 <button
                   type="button"
                   onClick={() => handleNav('contact')}
-                  className="w-full py-3 px-4 rounded-xl bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-[var(--accent-contrast)] font-bold text-xs tracking-wider uppercase text-center transition-colors cursor-pointer"
+                  className="w-full py-3.5 px-4 rounded-xl bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-[var(--accent-contrast)] font-bold text-xs tracking-wider uppercase text-center transition-colors cursor-pointer"
                 >
-                  Get Consultation
+                  {t.cta}
                 </button>
                 <a
                   href={COMPANY_INFO.whatsappLink}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-full py-3 px-4 rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] text-[var(--text-primary)] hover:border-[var(--accent-border)] font-medium text-xs inline-flex items-center justify-center gap-2 transition-colors"
+                  className="w-full py-3.5 px-4 rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] text-[var(--text-primary)] hover:border-[var(--accent-border)] font-medium text-xs inline-flex items-center justify-center gap-2 transition-colors"
                 >
-                  <span>WhatsApp: {COMPANY_INFO.whatsappDisplay}</span>
+                  <span>
+                    {t.whatsappPrefix}: {COMPANY_INFO.whatsappDisplay}
+                  </span>
                   <ArrowUpRight className="w-3.5 h-3.5 text-[var(--accent)]" aria-hidden="true" />
                 </a>
               </div>

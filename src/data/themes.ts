@@ -11,24 +11,24 @@ export interface ThemeOption {
 export const THEME_OPTIONS: ThemeOption[] = [
   {
     id: 'cobalt-slate',
-    name: 'Cobalt Slate',
+    name: 'Navy Prism',
     mode: 'Dark',
-    description: 'Deep midnight slate with crisp sky-cobalt accents',
-    swatches: ['#070B14', '#111A2E', '#38BDF8'],
+    description: 'Deep navy void with cyan, violet & amber blend',
+    swatches: ['#0B1B33', '#8C5DF8', '#28E1F6'],
   },
   {
     id: 'nordic-daylight',
     name: 'Nordic Daylight',
     mode: 'Light',
-    description: 'Crisp architectural white with royal cobalt highlights',
-    swatches: ['#FFFFFF', '#F4F7FB', '#1D4ED8'],
+    description: 'Crisp white & cool mist with cobalt-violet highlights',
+    swatches: ['#FFFFFF', '#F7F9FC', '#1D4ED8'],
   },
   {
     id: 'graphite-amber',
     name: 'Graphite Amber',
     mode: 'Dark',
     description: 'Carbon charcoal paired with precision amber gold',
-    swatches: ['#09090B', '#18181B', '#F59E0B'],
+    swatches: ['#09090B', '#18181B', '#FAB338'],
   },
   {
     id: 'alabaster-teal',

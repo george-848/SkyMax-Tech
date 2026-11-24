@@ -16,9 +16,17 @@ import {TechExpertiseSection} from './components/TechExpertiseSection';
 import {ContactSection} from './components/ContactSection';
 import {Footer} from './components/Footer';
 import {LegalModal, ProjectDetailModal, ServiceDetailModal} from './components/Modals';
-import {ThemeSwitcher} from './components/ThemeSwitcher';
-import {COMPANY_INFO, ProjectItem, SectionId, ServiceItem} from './data/companyConfig';
-import {DEFAULT_THEME, THEME_OPTIONS, ThemeId} from './data/themes';
+import {WhatsAppFloatingButton} from './components/WhatsAppFloatingButton';
+import {
+  DEFAULT_LANGUAGE,
+  I18N,
+  LANGUAGE_OPTIONS,
+  LanguageCode,
+  ProjectItem,
+  SectionId,
+  ServiceItem,
+} from './data/companyConfig';
+import {DEFAULT_THEME} from './data/themes';
 
 const SECTIONS: SectionId[] = [
   'hero',
@@ -31,42 +39,51 @@ const SECTIONS: SectionId[] = [
   'contact',
 ];
 
-const THEME_STORAGE_KEY = 'skymax_theme';
+const LANGUAGE_STORAGE_KEY = 'skymax_language';
 
-function getInitialTheme(): ThemeId {
+function getInitialLanguage(): LanguageCode {
   try {
-    const saved = window.localStorage.getItem(THEME_STORAGE_KEY) as ThemeId | null;
-    if (saved && THEME_OPTIONS.some((t) => t.id === saved)) {
+    const saved = window.localStorage.getItem(LANGUAGE_STORAGE_KEY) as LanguageCode | null;
+    if (saved && LANGUAGE_OPTIONS.some((l) => l.code === saved)) {
       return saved;
     }
   } catch {
     // Ignore storage access restrictions
   }
-  return DEFAULT_THEME;
+  return DEFAULT_LANGUAGE;
 }
 
 export default function App() {
-  const [activeTheme, setActiveTheme] = useState<ThemeId>(() => getInitialTheme());
+  const [activeLanguage, setActiveLanguage] = useState<LanguageCode>(() => getInitialLanguage());
   const [activeSection, setActiveSection] = useState<SectionId>('hero');
-  const [selectedService, setSelectedService] = useState<ServiceItem | null>(null);
-  const [selectedProject, setSelectedProject] = useState<ProjectItem | null>(null);
+  const [selectedServiceId, setSelectedServiceId] = useState<string | null>(null);
+  const [selectedProjectId, setSelectedProjectId] = useState<string | null>(null);
   const [legalDoc, setLegalDoc] = useState<'privacy' | 'terms' | null>(null);
   const [preselectedService, setPreselectedService] = useState<string>(
-    'Full-Stack SaaS Web Applications'
+    I18N[DEFAULT_LANGUAGE].services[0].title
   );
 
-  useEffect(() => {
-    document.title = `${COMPANY_INFO.name} | Business IT, Cloud & Full-Stack SaaS Solutions`;
-  }, []);
+  const locale = I18N[activeLanguage];
+  const selectedService: ServiceItem | null = selectedServiceId
+    ? locale.services.find((s) => s.id === selectedServiceId) ?? null
+    : null;
+  const selectedProject: ProjectItem | null = selectedProjectId
+    ? locale.projects.find((p) => p.id === selectedProjectId) ?? null
+    : null;
 
   useEffect(() => {
-    document.documentElement.dataset.theme = activeTheme;
+    document.documentElement.lang = activeLanguage;
+    document.title = locale.metaTitle;
     try {
-      window.localStorage.setItem(THEME_STORAGE_KEY, activeTheme);
+      window.localStorage.setItem(LANGUAGE_STORAGE_KEY, activeLanguage);
     } catch {
       // Ignore storage access restrictions
     }
-  }, [activeTheme]);
+  }, [activeLanguage, locale.metaTitle]);
+
+  useEffect(() => {
+    document.documentElement.dataset.theme = DEFAULT_THEME;
+  }, []);
 
   // Scroll-spy for single-page menu arrangement
   useEffect(() => {
@@ -113,55 +130,80 @@ export default function App() {
   return (
     <MotionConfig reducedMotion="user">
       <div className="min-h-screen flex flex-col bg-[var(--bg-primary)] text-[var(--text-primary)] overflow-x-hidden transition-colors duration-200">
-        <Navbar activeSection={activeSection} onNavigate={(id) => scrollToSection(id)} />
+        <Navbar
+          activeSection={activeSection}
+          onNavigate={(id) => scrollToSection(id)}
+          lang={activeLanguage}
+          onSelectLanguage={setActiveLanguage}
+        />
 
         <main className="flex-1 w-full">
           <HeroSection
-            onStartProject={() => scrollToSection('contact', 'General IT Consultation')}
+            lang={activeLanguage}
+            onStartProject={() =>
+              scrollToSection('contact', locale.contact.extraServiceOptions.general)
+            }
             onViewProjects={() => scrollToSection('projects')}
           />
 
-          <AboutSection onScheduleConsultation={() => scrollToSection('contact')} />
+          <AboutSection
+            lang={activeLanguage}
+            onScheduleConsultation={() => scrollToSection('contact')}
+          />
 
           <ServicesSection
-            onLearnMore={(service) => setSelectedService(service)}
+            lang={activeLanguage}
+            onLearnMore={(service) => setSelectedServiceId(service.id)}
             onRequestServiceQuote={(serviceTitle) => scrollToSection('contact', serviceTitle)}
           />
 
           <SolutionsAndWhySection
+            lang={activeLanguage}
             onDiscussSolution={(serviceTitle) => scrollToSection('contact', serviceTitle)}
           />
 
-          <ProjectsSection onSelectProject={(project) => setSelectedProject(project)} />
+          <ProjectsSection
+            lang={activeLanguage}
+            onSelectProject={(project) => setSelectedProjectId(project.id)}
+          />
 
-          <ProcessSection />
+          <ProcessSection lang={activeLanguage} />
 
-          <TechExpertiseSection />
+          <TechExpertiseSection lang={activeLanguage} />
 
-          <ContactSection preselectedService={preselectedService} />
+          <ContactSection lang={activeLanguage} preselectedService={preselectedService} />
         </main>
 
         <Footer
+          lang={activeLanguage}
           onNavigate={(id) => scrollToSection(id)}
-          onOpenService={(service) => setSelectedService(service)}
+          onOpenService={(service) => setSelectedServiceId(service.id)}
           onOpenLegal={(doc) => setLegalDoc(doc)}
         />
 
-        <ThemeSwitcher activeTheme={activeTheme} onSelectTheme={setActiveTheme} />
+        <div className="fixed bottom-3.5 right-3.5 sm:bottom-5 sm:right-5 z-40">
+          <WhatsAppFloatingButton lang={activeLanguage} />
+        </div>
 
         <ServiceDetailModal
+          lang={activeLanguage}
           service={selectedService}
-          onClose={() => setSelectedService(null)}
+          onClose={() => setSelectedServiceId(null)}
           onRequestQuote={(title) => scrollToSection('contact', title)}
         />
 
         <ProjectDetailModal
+          lang={activeLanguage}
           project={selectedProject}
-          onClose={() => setSelectedProject(null)}
+          onClose={() => setSelectedProjectId(null)}
           onRequestSimilar={(category) => scrollToSection('contact', category)}
         />
 
-        <LegalModal docType={legalDoc} onClose={() => setLegalDoc(null)} />
+        <LegalModal
+          lang={activeLanguage}
+          docType={legalDoc}
+          onClose={() => setLegalDoc(null)}
+        />
       </div>
     </MotionConfig>
   );
