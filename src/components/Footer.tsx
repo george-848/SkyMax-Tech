@@ -1,115 +1,146 @@
-import {ArrowUpRight, Mail, MapPin, MessageCircle} from 'lucide-react';
-import {COMPANY_INFO, PageId, SERVICES, ServiceItem} from '../data/companyConfig';
+import {FormEvent, useState} from 'react';
+import {
+  ArrowRight,
+  CalendarCheck,
+  Check,
+  Compass,
+  Mail,
+  MapPin,
+  MessageCircle,
+  ShieldCheck,
+  Wrench,
+} from 'lucide-react';
+import {COMPANY_INFO, SERVICES, SectionId, ServiceItem} from '../data/companyConfig';
 
 interface FooterProps {
-  onNavigate: (page: PageId) => void;
+  onNavigate: (section: SectionId) => void;
   onOpenService: (service: ServiceItem) => void;
   onOpenLegal: (doc: 'privacy' | 'terms') => void;
 }
 
-const FOOTER_NAV: {label: string; page: PageId}[] = [
-  {label: 'Home', page: 'home'},
-  {label: 'About Us', page: 'about'},
-  {label: 'Services', page: 'services'},
-  {label: 'Solutions', page: 'solutions'},
-  {label: 'Projects', page: 'projects'},
-  {label: 'Contact', page: 'contact'},
+const FOOTER_LINKS: {id: SectionId; label: string}[] = [
+  {id: 'hero', label: 'Home'},
+  {id: 'about', label: 'About Us'},
+  {id: 'services', label: 'Core Services'},
+  {id: 'why-us', label: 'Why Choose Us'},
+  {id: 'projects', label: 'Sample Projects'},
+  {id: 'process', label: 'Our Process'},
+  {id: 'tech', label: 'Technologies'},
+  {id: 'contact', label: 'Contact'},
 ];
 
 export function Footer({onNavigate, onOpenService, onOpenLegal}: FooterProps) {
+  const [updateEmail, setUpdateEmail] = useState('');
+  const [subscribed, setSubscribed] = useState(false);
+
+  const handleSubscribe = (e: FormEvent) => {
+    e.preventDefault();
+    if (updateEmail.trim() && updateEmail.includes('@')) {
+      setSubscribed(true);
+      setUpdateEmail('');
+      setTimeout(() => setSubscribed(false), 6000);
+    }
+  };
+
   return (
-    <footer className="bg-[#0B1220] text-slate-300 border-t border-white/10">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 lg:py-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10 pb-12 border-b border-white/10">
-          {/* Brand Column */}
-          <div className="lg:col-span-4">
+    <footer className="border-t border-[var(--border-subtle)] bg-[var(--bg-primary)] text-[var(--text-secondary)]">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10 items-start">
+          {/* Column 1: Brand + Updates Input */}
+          <div className="lg:col-span-4 space-y-5 text-left">
             <a
-              href="#home"
+              href="#hero"
               onClick={(e) => {
                 e.preventDefault();
-                onNavigate('home');
+                onNavigate('hero');
               }}
-              className="inline-flex items-center gap-2.5 text-white font-bold text-lg tracking-tight"
+              className="inline-flex items-center gap-2.5 text-[var(--text-primary)] font-bold text-base tracking-tight hover:text-[var(--accent)] transition-colors"
+              style={{fontFamily: 'var(--font-display)'}}
             >
               <svg
-                width="28"
-                height="28"
+                width="26"
+                height="26"
                 viewBox="0 0 64 64"
                 fill="none"
                 aria-hidden="true"
                 className="shrink-0"
               >
-                <rect width="64" height="64" rx="14" fill="#142D4E" />
+                <rect
+                  x="1"
+                  y="1"
+                  width="62"
+                  height="62"
+                  rx="14"
+                  style={{fill: 'var(--bg-surface)', stroke: 'var(--border-subtle)'}}
+                  strokeWidth="2.5"
+                />
                 <path
                   d="M16 44V20L26 32L36 20V44"
-                  stroke="#F8FAFC"
+                  style={{stroke: 'var(--text-primary)'}}
                   strokeWidth="4.5"
                   strokeLinecap="round"
                   strokeLinejoin="round"
                 />
                 <path
-                  d="M44 22L48 26L44 30"
-                  stroke="#06B6D4"
+                  d="M44 22L49 27L44 32"
+                  style={{stroke: 'var(--accent)'}}
                   strokeWidth="4"
                   strokeLinecap="round"
                   strokeLinejoin="round"
                 />
-                <circle cx="46" cy="40" r="4" fill="#2563EB" />
+                <rect x="42" y="38" width="7" height="7" rx="2" style={{fill: 'var(--accent)'}} />
               </svg>
               <span>{COMPANY_INFO.name}</span>
             </a>
 
-            <p className="mt-4 text-sm text-slate-400 leading-relaxed max-w-sm">
+            <p className="text-xs sm:text-sm leading-relaxed text-[var(--text-secondary)] max-w-sm">
               {COMPANY_INFO.footerIntro}
             </p>
 
-            <div className="mt-6 flex flex-wrap gap-2.5">
-              {COMPANY_INFO.socialLinks.map((social) => (
-                <a
-                  key={social.label}
-                  href={social.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-white/5 hover:bg-[#2563EB] border border-white/10 text-xs font-medium text-slate-200 hover:text-white transition-colors"
-                >
-                  <span>{social.label}</span>
-                  <ArrowUpRight className="w-3 h-3" aria-hidden="true" />
-                </a>
-              ))}
+            <div className="space-y-2 max-w-sm pt-1">
+              <p className="text-[10px] font-mono tracking-[0.18em] uppercase text-[var(--text-muted)] font-semibold">
+                Stay Updated
+              </p>
+              {subscribed ? (
+                <div className="flex items-center gap-2 text-xs text-[var(--accent)] font-mono py-2">
+                  <Check className="w-3.5 h-3.5" aria-hidden="true" />
+                  <span>Subscribed to SkyMax updates.</span>
+                </div>
+              ) : (
+                <form onSubmit={handleSubscribe} className="relative flex items-center">
+                  <input
+                    type="email"
+                    value={updateEmail}
+                    onChange={(e) => setUpdateEmail(e.target.value)}
+                    placeholder="name@company.com"
+                    required
+                    aria-label="Email address for updates"
+                    className="w-full bg-[var(--bg-input)] border border-[var(--border-subtle)] rounded-xl px-4 py-3 text-xs outline-none focus:border-[var(--accent)] text-[var(--text-primary)] placeholder:text-[var(--text-muted)] transition-colors pr-11"
+                  />
+                  <button
+                    type="submit"
+                    aria-label="Subscribe for updates"
+                    className="absolute right-2 p-2 rounded-lg bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-[var(--accent-contrast)] cursor-pointer transition-colors"
+                  >
+                    <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
+                  </button>
+                </form>
+              )}
             </div>
           </div>
 
-          {/* Quick Navigation */}
-          <div className="lg:col-span-2">
-            <h3 className="text-sm font-bold text-white">Pages</h3>
-            <ul className="mt-4 space-y-2.5 text-sm">
-              {FOOTER_NAV.map((item) => (
-                <li key={item.page}>
-                  <a
-                    href={`#${item.page}`}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      onNavigate(item.page);
-                    }}
-                    className="text-slate-400 hover:text-white transition-colors"
-                  >
-                    {item.label}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Services Column */}
-          <div className="lg:col-span-3">
-            <h3 className="text-sm font-bold text-white">Services</h3>
-            <ul className="mt-4 space-y-2.5 text-sm">
+          {/* Column 2: Core Services */}
+          <div className="lg:col-span-3 text-left space-y-4">
+            <h3 className="text-[11px] font-mono tracking-[0.18em] uppercase text-[var(--text-primary)] font-bold">
+              Our Core Services
+            </h3>
+            <ul className="space-y-2.5 text-xs">
               {SERVICES.map((service) => (
                 <li key={service.id}>
                   <button
                     type="button"
                     onClick={() => onOpenService(service)}
-                    className="text-left text-slate-400 hover:text-white transition-colors cursor-pointer"
+                    className="hover:text-[var(--accent)] hover:translate-x-0.5 transition-all text-left cursor-pointer"
                   >
                     {service.title}
                   </button>
@@ -118,72 +149,130 @@ export function Footer({onNavigate, onOpenService, onOpenLegal}: FooterProps) {
             </ul>
           </div>
 
-          {/* Contact Column */}
-          <div className="lg:col-span-3">
-            <h3 className="text-sm font-bold text-white">Contact</h3>
-            <ul className="mt-4 space-y-3 text-sm">
-              <li className="flex items-start gap-2.5 text-slate-300">
-                <MapPin className="w-4 h-4 text-[#06B6D4] shrink-0 mt-0.5" aria-hidden="true" />
-                <span>{COMPANY_INFO.location}</span>
-              </li>
-              <li>
-                <a
-                  href={`mailto:${COMPANY_INFO.emailPlaceholder}`}
-                  className="inline-flex items-start gap-2.5 text-slate-300 hover:text-white transition-colors break-all"
-                >
-                  <Mail className="w-4 h-4 text-[#06B6D4] shrink-0 mt-0.5" aria-hidden="true" />
-                  <span>{COMPANY_INFO.emailPlaceholder}</span>
-                </a>
-              </li>
-              <li>
+          {/* Column 3: Navigation Links */}
+          <div className="lg:col-span-2 text-left space-y-4">
+            <h3 className="text-[11px] font-mono tracking-[0.18em] uppercase text-[var(--text-primary)] font-bold">
+              Navigation
+            </h3>
+            <ul className="space-y-2.5 text-xs">
+              {FOOTER_LINKS.map((link) => (
+                <li key={link.id}>
+                  <button
+                    type="button"
+                    onClick={() => onNavigate(link.id)}
+                    className="hover:text-[var(--accent)] hover:translate-x-0.5 transition-all text-left cursor-pointer"
+                  >
+                    {link.label}
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Column 4: Corporate Scope & Consultation */}
+          <div className="lg:col-span-3 text-left space-y-4">
+            <h3 className="text-[11px] font-mono tracking-[0.18em] uppercase text-[var(--text-primary)] font-bold">
+              Contact &amp; Scope
+            </h3>
+            <div className="space-y-3.5 text-xs">
+              <div>
+                <p className="inline-flex items-center gap-1.5 font-mono font-bold text-[var(--text-muted)] uppercase tracking-widest text-[10px]">
+                  <MapPin className="w-3 h-3 text-[var(--accent)]" aria-hidden="true" />
+                  <span>Service Region</span>
+                </p>
+                <p className="mt-0.5 text-[var(--text-primary)]">{COMPANY_INFO.locationDetail}</p>
+              </div>
+              <div>
+                <p className="font-mono font-bold text-[var(--text-muted)] uppercase tracking-widest text-[10px]">
+                  WhatsApp Direct
+                </p>
                 <a
                   href={COMPANY_INFO.whatsappLink}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2.5 text-slate-300 hover:text-white transition-colors"
+                  className="mt-0.5 inline-flex items-center gap-1.5 text-[var(--text-primary)] hover:text-[var(--accent)] font-mono transition-colors tabular-nums"
                 >
-                  <MessageCircle
-                    className="w-4 h-4 text-[#06B6D4] shrink-0"
-                    aria-hidden="true"
-                  />
-                  <span>WhatsApp: {COMPANY_INFO.whatsappInternational}</span>
+                  <MessageCircle className="w-3.5 h-3.5 text-[var(--accent)]" aria-hidden="true" />
+                  <span>{COMPANY_INFO.whatsappInternational}</span>
                 </a>
-              </li>
-            </ul>
-
-            <a
-              href={COMPANY_INFO.whatsappLink}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-5 inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-[#2563EB] hover:bg-[#1D4ED8] text-white text-xs font-semibold transition-colors whitespace-nowrap shrink-0"
-            >
-              <span>Start WhatsApp Chat</span>
-              <ArrowUpRight className="w-3.5 h-3.5" aria-hidden="true" />
-            </a>
+              </div>
+              <div className="pt-1">
+                <button
+                  type="button"
+                  onClick={() => onNavigate('contact')}
+                  className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg border border-[var(--accent-border)] bg-[var(--bg-surface)] hover:bg-[var(--accent)] hover:text-[var(--accent-contrast)] transition-all duration-200 hover:-translate-y-0.5 text-[11px] font-mono font-bold text-[var(--accent)] cursor-pointer uppercase"
+                >
+                  <CalendarCheck className="w-3.5 h-3.5" aria-hidden="true" />
+                  <span>Book a Free Consultation</span>
+                </button>
+              </div>
+            </div>
           </div>
         </div>
+      </div>
 
-        {/* Bottom Legal Row */}
-        <div className="pt-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-xs text-slate-400">
-          <p>
-            &copy; {COMPANY_INFO.copyrightYear} {COMPANY_INFO.name}. All rights reserved.
-          </p>
+      {/* Bottom Delivery Strip & Legal Row */}
+      <div className="border-t border-[var(--border-subtle)] py-8 bg-[var(--bg-secondary)] text-[var(--text-muted)]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6 lg:gap-10">
+            <div className="text-left">
+              <span className="text-[10px] font-mono font-bold tracking-[0.18em] uppercase text-[var(--text-muted)]">
+                How We Deliver
+              </span>
+              <div className="flex items-center gap-2.5 mt-1.5 select-none">
+                <span className="inline-flex items-center gap-1 text-[11px] font-bold text-[var(--text-secondary)]">
+                  <Compass className="w-3.5 h-3.5 text-[var(--accent)]" aria-hidden="true" />
+                  1. Plan
+                </span>
+                <span className="w-4 h-px bg-[var(--border-subtle)]" aria-hidden="true" />
+                <span className="inline-flex items-center gap-1 text-[11px] font-bold text-[var(--accent)]">
+                  <Wrench className="w-3.5 h-3.5" aria-hidden="true" />
+                  2. Build
+                </span>
+                <span className="w-4 h-px bg-[var(--border-subtle)]" aria-hidden="true" />
+                <span className="inline-flex items-center gap-1 text-[11px] font-bold text-[var(--text-secondary)]">
+                  <ShieldCheck className="w-3.5 h-3.5 text-[var(--accent)]" aria-hidden="true" />
+                  3. Support
+                </span>
+              </div>
+            </div>
 
-          <div className="flex items-center gap-6">
-            <button
-              type="button"
-              onClick={() => onOpenLegal('privacy')}
-              className="hover:text-white transition-colors cursor-pointer"
-            >
-              Privacy Policy
-            </button>
-            <button
-              type="button"
-              onClick={() => onOpenLegal('terms')}
-              className="hover:text-white transition-colors cursor-pointer"
-            >
-              Terms and Conditions
-            </button>
+            <div className="hidden sm:block h-9 w-px bg-[var(--border-subtle)]" aria-hidden="true" />
+
+            <div className="text-left">
+              <span className="text-[10px] font-mono font-bold tracking-[0.18em] uppercase text-[var(--text-muted)]">
+                Email Us
+              </span>
+              <a
+                href={`mailto:${COMPANY_INFO.emailPlaceholder}`}
+                className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-mono font-bold text-[var(--accent)] hover:text-[var(--text-primary)] transition-colors mt-0.5"
+              >
+                <Mail className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
+                <span>{COMPANY_INFO.emailPlaceholder}</span>
+              </a>
+            </div>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-5 text-[11px] font-mono text-[var(--text-muted)] pt-4 md:pt-0 border-t md:border-t-0 border-[var(--border-subtle)] w-full md:w-auto justify-between md:justify-end">
+            <span>
+              &copy; {COMPANY_INFO.copyrightYear} {COMPANY_INFO.name}
+            </span>
+            <div className="flex items-center gap-4">
+              <button
+                type="button"
+                onClick={() => onOpenLegal('privacy')}
+                className="hover:text-[var(--accent)] transition-colors cursor-pointer"
+              >
+                Privacy
+              </button>
+              <button
+                type="button"
+                onClick={() => onOpenLegal('terms')}
+                className="hover:text-[var(--accent)] transition-colors cursor-pointer"
+              >
+                Terms
+              </button>
+            </div>
           </div>
         </div>
       </div>

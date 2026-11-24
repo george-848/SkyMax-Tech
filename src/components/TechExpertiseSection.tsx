@@ -1,118 +1,130 @@
 import {useState} from 'react';
-import {motion, useReducedMotion} from 'motion/react';
+import {
+  Cloud,
+  Code2,
+  Cpu,
+  GitBranch,
+  Grid2x2,
+  Network,
+  Server,
+  ShieldCheck,
+} from 'lucide-react';
+import {AnimatePresence, motion, useReducedMotion} from 'motion/react';
 import {TECH_EXPERTISE, TechCategory} from '../data/companyConfig';
-import {MODERN_EASE} from './MotionPrimitives';
+import {MODERN_EASE, Reveal} from './MotionPrimitives';
 
 type FilterTab = 'All' | TechCategory['category'];
 
-const FILTER_TABS: FilterTab[] = [
-  'All',
-  'Cloud',
-  'DevOps',
-  'Systems',
-  'Networking',
-  'Development',
-  'Security',
+const FILTER_TABS: {id: FilterTab; label: string; Icon: typeof Grid2x2}[] = [
+  {id: 'All', label: 'All Tech', Icon: Grid2x2},
+  {id: 'Cloud', label: 'Cloud', Icon: Cloud},
+  {id: 'DevOps', label: 'DevOps', Icon: GitBranch},
+  {id: 'Systems', label: 'Systems', Icon: Server},
+  {id: 'Networking', label: 'Networking', Icon: Network},
+  {id: 'Development', label: 'Development', Icon: Code2},
+  {id: 'Security', label: 'Security', Icon: ShieldCheck},
 ];
 
 export function TechExpertiseSection() {
   const [activeCategory, setActiveCategory] = useState<FilterTab>('All');
   const prefersReducedMotion = useReducedMotion();
 
-  const visibleGroups =
+  const visibleItems =
     activeCategory === 'All'
-      ? TECH_EXPERTISE
-      : TECH_EXPERTISE.filter((group) => group.category === activeCategory);
+      ? TECH_EXPERTISE.flatMap((group) =>
+          group.items.map((item) => ({...item, category: group.category}))
+        )
+      : TECH_EXPERTISE.filter((group) => group.category === activeCategory).flatMap((group) =>
+          group.items.map((item) => ({...item, category: group.category}))
+        );
 
   return (
     <section
-      id="expertise"
-      className="py-16 lg:py-20 bg-[#0B1220] text-white bg-navy-grid border-b border-white/10"
+      id="tech"
+      className="py-20 lg:py-24 bg-[var(--bg-primary)] text-[var(--text-primary)] relative overflow-hidden border-b border-[var(--border-subtle)]"
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6">
-          <div className="max-w-2xl">
-            <p className="text-sm font-semibold text-[#06B6D4] tracking-wide">
-              Technology Expertise
-            </p>
-            <h2
-              className="mt-2 text-2xl sm:text-3xl font-extrabold text-white tracking-tight"
-              style={{textWrap: 'balance'}}
-            >
-              Enterprise Platforms Across Every Layer
-            </h2>
-            <p className="mt-3 text-base text-slate-300 leading-relaxed">
-              We build and administer production infrastructure using industry-standard cloud,
-              DevOps, systems, networking, development, and surveillance tooling.
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
+        <Reveal className="max-w-2xl mx-auto mb-12 space-y-3">
+          <div className="inline-flex items-center justify-center gap-2">
+            <Cpu className="w-3.5 h-3.5 text-[var(--accent)]" aria-hidden="true" />
+            <p className="text-xs font-mono font-bold tracking-[0.2em] uppercase text-[var(--accent)]">
+              Trusted Platforms
             </p>
           </div>
-
-          {/* Interactive Filter Controls */}
-          <div
-            role="tablist"
-            aria-label="Filter technology expertise by domain"
-            className="flex flex-wrap items-center gap-1.5 p-1.5 rounded-xl bg-[#142D4E]/70 border border-white/10 self-start lg:self-end"
+          <h2
+            className="text-3xl sm:text-4xl font-extrabold tracking-tight text-[var(--text-primary)]"
+            style={{textWrap: 'balance'}}
           >
-            {FILTER_TABS.map((tab) => {
-              const isSelected = activeCategory === tab;
-              return (
-                <button
-                  key={tab}
-                  type="button"
-                  role="tab"
-                  aria-selected={isSelected}
-                  onClick={() => setActiveCategory(tab)}
-                  className={`px-3.5 py-2 rounded-lg text-xs sm:text-sm font-semibold transition-colors duration-150 whitespace-nowrap shrink-0 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#06B6D4] ${
-                    isSelected
-                      ? 'bg-[#2563EB] text-white shadow-sm'
-                      : 'text-slate-300 hover:text-white hover:bg-white/5'
-                  }`}
+            Technologies We Use
+          </h2>
+          <p className="text-sm sm:text-base text-[var(--text-secondary)] leading-relaxed">
+            Proven software, cloud, server, networking, and security tools chosen for everyday
+            reliability.
+          </p>
+        </Reveal>
+
+        {/* Interactive Filter Tabs */}
+        <div
+          role="tablist"
+          aria-label="Filter technology expertise by domain"
+          className="flex flex-wrap justify-center items-center gap-2 mb-10"
+        >
+          {FILTER_TABS.map(({id, label, Icon}) => {
+            const isSelected = activeCategory === id;
+            return (
+              <button
+                key={id}
+                type="button"
+                role="tab"
+                aria-selected={isSelected}
+                onClick={() => setActiveCategory(id)}
+                className={`inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-semibold tracking-wide transition-all duration-200 whitespace-nowrap shrink-0 cursor-pointer border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] ${
+                  isSelected
+                    ? 'bg-[var(--accent)] border-[var(--accent)] text-[var(--accent-contrast)] font-bold shadow-md'
+                    : 'border-[var(--border-subtle)] bg-[var(--bg-surface)] hover:bg-[var(--bg-surface-hover)] text-[var(--text-secondary)] hover:border-[var(--accent-border)]'
+                }`}
+              >
+                <Icon className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
+                <span>{label}</span>
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Clean 4-Column Tech Grid */}
+        <motion.div
+          layout={!prefersReducedMotion}
+          className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 text-left"
+        >
+          <AnimatePresence mode="popLayout">
+            {visibleItems.map((tech) => (
+              <motion.div
+                key={`${tech.category}-${tech.name}`}
+                layout={!prefersReducedMotion}
+                initial={prefersReducedMotion ? {opacity: 1, scale: 1} : {opacity: 0, scale: 0.96}}
+                animate={{opacity: 1, scale: 1}}
+                exit={prefersReducedMotion ? {opacity: 0} : {opacity: 0, scale: 0.96}}
+                whileHover={prefersReducedMotion ? undefined : {y: -3}}
+                transition={{duration: 0.22, ease: MODERN_EASE}}
+                className="p-4 rounded-2xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] flex items-start gap-3.5 hover:border-[var(--accent-border)] transition-colors duration-200 group"
+                style={{boxShadow: 'var(--shadow-card)'}}
+              >
+                <div
+                  aria-hidden="true"
+                  className="w-10 h-10 rounded-xl shrink-0 border border-[var(--accent-border)] bg-[var(--accent-soft)] text-[var(--accent)] group-hover:bg-[var(--accent)] group-hover:text-[var(--accent-contrast)] group-hover:scale-105 flex items-center justify-center font-mono text-[11px] font-bold transition-all duration-200"
                 >
-                  {tab}
-                </button>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* Technology Groups */}
-        <div className="mt-10 space-y-6">
-          {visibleGroups.map((group) => (
-            <motion.div
-              key={group.category}
-              layout={!prefersReducedMotion}
-              initial={prefersReducedMotion ? {opacity: 1, y: 0} : {opacity: 0, y: 10}}
-              animate={{opacity: 1, y: 0}}
-              transition={{duration: 0.28, ease: MODERN_EASE}}
-              className="rounded-2xl bg-[#142D4E]/45 backdrop-blur-sm border border-white/10 p-6 sm:p-7"
-            >
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-4 border-b border-white/10">
-                <h3 className="text-lg font-bold text-white">{group.category}</h3>
-                <p className="text-sm text-slate-300">{group.summary}</p>
-              </div>
-
-              <div className="mt-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                {group.items.map((tech) => (
-                  <div
-                    key={tech.name}
-                    className="flex items-center gap-4 rounded-xl bg-[#0B1220]/80 border border-white/10 px-4 py-3.5 hover:border-[#06B6D4]/50 hover:-translate-y-0.5 transition-all duration-150"
-                  >
-                    <div
-                      aria-hidden="true"
-                      className="w-11 h-11 rounded-lg bg-[#142D4E] border border-white/10 flex items-center justify-center font-mono text-xs font-semibold text-[#06B6D4] shrink-0"
-                    >
-                      {tech.code}
-                    </div>
-                    <div className="min-w-0">
-                      <p className="text-sm font-bold text-white truncate">{tech.name}</p>
-                      <p className="text-xs text-slate-400 truncate mt-0.5">{tech.role}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </motion.div>
-          ))}
-        </div>
+                  {tech.code}
+                </div>
+                <div className="min-w-0">
+                  <p className="text-sm font-bold text-[var(--text-primary)] group-hover:text-[var(--accent)] transition-colors truncate">
+                    {tech.name}
+                  </p>
+                  <p className="text-xs text-[var(--text-muted)] truncate mt-0.5">{tech.role}</p>
+                </div>
+              </motion.div>
+            ))}
+          </AnimatePresence>
+        </motion.div>
       </div>
     </section>
   );

@@ -1,5 +1,5 @@
 import {useEffect} from 'react';
-import {ArrowRight, Check, X, MessageCircle} from 'lucide-react';
+import {ArrowRight, Check, MessageCircle, X} from 'lucide-react';
 import {AnimatePresence, motion, useReducedMotion} from 'motion/react';
 import {COMPANY_INFO, ProjectItem, ServiceItem} from '../data/companyConfig';
 import {MODERN_EASE} from './MotionPrimitives';
@@ -29,9 +29,9 @@ export function ServiceDetailModal({service, onClose, onRequestQuote}: ServiceMo
         <motion.div
           initial={prefersReducedMotion ? {opacity: 1} : {opacity: 0}}
           animate={{opacity: 1}}
-          exit={prefersReducedMotion ? {opacity: 0} : {opacity: 0}}
+          exit={{opacity: 0}}
           transition={{duration: 0.18}}
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#0B1220]/75 backdrop-blur-sm"
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-md"
           role="dialog"
           aria-modal="true"
           aria-labelledby="service-modal-title"
@@ -39,22 +39,22 @@ export function ServiceDetailModal({service, onClose, onRequestQuote}: ServiceMo
         >
           <motion.div
             initial={
-              prefersReducedMotion ? {opacity: 1, scale: 1} : {opacity: 0, scale: 0.97, y: 10}
+              prefersReducedMotion ? {opacity: 1, scale: 1} : {opacity: 0, scale: 0.96, y: 12}
             }
             animate={{opacity: 1, scale: 1, y: 0}}
             exit={
-              prefersReducedMotion ? {opacity: 0, scale: 1} : {opacity: 0, scale: 0.97, y: 8}
+              prefersReducedMotion ? {opacity: 0, scale: 1} : {opacity: 0, scale: 0.96, y: 8}
             }
             transition={{duration: 0.22, ease: MODERN_EASE}}
-            className="w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-2xl bg-white border border-slate-200 shadow-2xl"
+            className="w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-2xl bg-[var(--bg-surface)] border border-[var(--border-subtle)] text-[var(--text-primary)] shadow-2xl"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="sticky top-0 z-10 bg-[#0B1220] text-white px-6 py-5 flex items-start justify-between gap-4 border-b border-white/10">
+            <div className="sticky top-0 z-10 bg-[var(--bg-primary)]/95 backdrop-blur-md px-6 py-5 flex items-start justify-between gap-4 border-b border-[var(--border-subtle)]">
               <div>
-                <p className="text-xs font-mono text-[#06B6D4]">Service {service.number}</p>
+                <p className="text-xs font-mono text-[var(--accent)]">Service {service.number}</p>
                 <h3
                   id="service-modal-title"
-                  className="mt-1 text-xl sm:text-2xl font-bold text-white"
+                  className="mt-1 text-xl sm:text-2xl font-bold text-[var(--text-primary)]"
                 >
                   {service.title}
                 </h3>
@@ -63,25 +63,32 @@ export function ServiceDetailModal({service, onClose, onRequestQuote}: ServiceMo
                 type="button"
                 onClick={onClose}
                 aria-label="Close service details"
-                className="w-9 h-9 rounded-lg bg-white/10 hover:bg-white/20 text-white flex items-center justify-center cursor-pointer shrink-0 transition-colors"
+                className="w-9 h-9 rounded-lg bg-[var(--bg-surface)] border border-[var(--border-subtle)] hover:border-[var(--accent-border)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] flex items-center justify-center cursor-pointer shrink-0 transition-colors"
               >
-                <X className="w-5 h-5" />
+                <X className="w-4 h-4" />
               </button>
             </div>
 
-            <div className="p-6 sm:p-8 space-y-6">
+            <div className="p-6 sm:p-8 space-y-6 text-left">
               {service.callout && (
-                <p className="text-base font-bold text-[#2563EB]">{service.callout}</p>
+                <p className="text-sm font-bold text-[var(--accent)]">{service.callout}</p>
               )}
-              <p className="text-base text-[#0F172A] leading-relaxed">{service.description}</p>
+              <p className="text-sm sm:text-base text-[var(--text-secondary)] leading-relaxed">
+                {service.description}
+              </p>
 
               <div>
-                <h4 className="text-sm font-bold text-[#0F172A]">Included Capabilities</h4>
+                <h4 className="text-xs font-mono uppercase tracking-[0.18em] text-[var(--accent)] font-bold">
+                  What Is Included
+                </h4>
                 <ul className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                   {service.capabilities.map((cap) => (
-                    <li key={cap} className="flex items-start gap-2 text-sm text-[#0F172A]">
+                    <li
+                      key={cap}
+                      className="flex items-start gap-2 text-xs sm:text-sm text-[var(--text-primary)]"
+                    >
                       <Check
-                        className="w-4 h-4 text-[#2563EB] shrink-0 mt-0.5"
+                        className="w-4 h-4 text-[var(--accent)] shrink-0 mt-0.5"
                         aria-hidden="true"
                       />
                       <span>{cap}</span>
@@ -90,12 +97,17 @@ export function ServiceDetailModal({service, onClose, onRequestQuote}: ServiceMo
                 </ul>
               </div>
 
-              <div className="pt-5 border-t border-slate-200">
-                <h4 className="text-sm font-bold text-[#0F172A]">Typical Deliverables</h4>
+              <div className="pt-5 border-t border-[var(--border-subtle)]">
+                <h4 className="text-xs font-mono uppercase tracking-[0.18em] text-[var(--accent)] font-bold">
+                  What You Receive
+                </h4>
                 <ul className="mt-3 space-y-2">
                   {service.deliverables.map((item) => (
-                    <li key={item} className="text-sm text-[#64748B] flex items-start gap-2">
-                      <span className="text-[#2563EB] font-bold" aria-hidden="true">
+                    <li
+                      key={item}
+                      className="text-xs sm:text-sm text-[var(--text-secondary)] flex items-start gap-2"
+                    >
+                      <span className="text-[var(--accent)] font-bold" aria-hidden="true">
                         ·
                       </span>
                       <span>{item}</span>
@@ -104,7 +116,7 @@ export function ServiceDetailModal({service, onClose, onRequestQuote}: ServiceMo
                 </ul>
               </div>
 
-              <div className="pt-5 border-t border-slate-200 flex flex-wrap items-center justify-between gap-3">
+              <div className="pt-5 border-t border-[var(--border-subtle)] flex flex-wrap items-center justify-between gap-3">
                 <button
                   type="button"
                   onClick={() => {
@@ -112,9 +124,9 @@ export function ServiceDetailModal({service, onClose, onRequestQuote}: ServiceMo
                     onClose();
                     onRequestQuote(title);
                   }}
-                  className="inline-flex items-center gap-2 px-5 py-3 rounded-lg bg-[#2563EB] hover:bg-[#1D4ED8] text-white text-sm font-semibold transition-colors cursor-pointer"
+                  className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-[var(--accent-contrast)] text-xs font-bold uppercase tracking-wider transition-colors cursor-pointer"
                 >
-                  <span>Request a Quote for This Service</span>
+                  <span>Request a Quote</span>
                   <ArrowRight className="w-4 h-4" aria-hidden="true" />
                 </button>
 
@@ -124,9 +136,9 @@ export function ServiceDetailModal({service, onClose, onRequestQuote}: ServiceMo
                   )}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 px-4 py-3 rounded-lg border border-slate-200 text-sm font-semibold text-[#0F172A] hover:bg-slate-50 transition-colors"
+                  className="inline-flex items-center gap-2 px-4 py-3 rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-primary)] text-xs font-semibold text-[var(--text-primary)] hover:border-[var(--accent-border)] transition-colors"
                 >
-                  <MessageCircle className="w-4 h-4 text-[#2563EB]" aria-hidden="true" />
+                  <MessageCircle className="w-4 h-4 text-[var(--accent)]" aria-hidden="true" />
                   <span>Discuss on WhatsApp</span>
                 </a>
               </div>
@@ -166,9 +178,9 @@ export function ProjectDetailModal({
         <motion.div
           initial={prefersReducedMotion ? {opacity: 1} : {opacity: 0}}
           animate={{opacity: 1}}
-          exit={prefersReducedMotion ? {opacity: 0} : {opacity: 0}}
+          exit={{opacity: 0}}
           transition={{duration: 0.18}}
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#0B1220]/75 backdrop-blur-sm"
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-md"
           role="dialog"
           aria-modal="true"
           aria-labelledby="project-modal-title"
@@ -176,17 +188,17 @@ export function ProjectDetailModal({
         >
           <motion.div
             initial={
-              prefersReducedMotion ? {opacity: 1, scale: 1} : {opacity: 0, scale: 0.97, y: 10}
+              prefersReducedMotion ? {opacity: 1, scale: 1} : {opacity: 0, scale: 0.96, y: 12}
             }
             animate={{opacity: 1, scale: 1, y: 0}}
             exit={
-              prefersReducedMotion ? {opacity: 0, scale: 1} : {opacity: 0, scale: 0.97, y: 8}
+              prefersReducedMotion ? {opacity: 0, scale: 1} : {opacity: 0, scale: 0.96, y: 8}
             }
             transition={{duration: 0.22, ease: MODERN_EASE}}
-            className="w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-2xl bg-white border border-slate-200 shadow-2xl"
+            className="w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-2xl bg-[var(--bg-surface)] border border-[var(--border-subtle)] text-[var(--text-primary)] shadow-2xl"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="relative aspect-[16/9] w-full bg-[#0B1220] overflow-hidden">
+            <div className="relative aspect-[16/9] w-full bg-[#070B14] overflow-hidden">
               <ResilientImage
                 src={project.image}
                 alt={project.imageAlt}
@@ -195,40 +207,52 @@ export function ProjectDetailModal({
               />
               <div
                 aria-hidden="true"
-                className="absolute inset-0 bg-gradient-to-t from-[#0B1220]/90 via-[#0B1220]/30 to-transparent"
+                className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent"
               />
               <button
                 type="button"
                 onClick={onClose}
                 aria-label="Close project details"
-                className="absolute top-4 right-4 w-9 h-9 rounded-lg bg-[#0B1220]/80 hover:bg-[#0B1220] text-white flex items-center justify-center cursor-pointer border border-white/15 transition-colors"
+                className="absolute top-4 right-4 w-9 h-9 rounded-lg bg-black/70 hover:bg-black text-white flex items-center justify-center cursor-pointer border border-white/20 transition-colors"
               >
-                <X className="w-5 h-5" />
+                <X className="w-4 h-4" />
               </button>
-              <div className="absolute bottom-4 left-6 right-6 text-white">
-                <p className="text-xs font-medium text-[#06B6D4]">{project.demoScopeLabel}</p>
-                <h3 id="project-modal-title" className="mt-1 text-xl sm:text-2xl font-bold">
+              <div className="absolute bottom-4 left-6 right-6 text-left">
+                <p
+                  className="text-xs font-mono font-semibold"
+                  style={{color: 'var(--accent-on-photo)'}}
+                >
+                  {project.demoScopeLabel}
+                </p>
+                <h3 id="project-modal-title" className="mt-1 text-xl sm:text-2xl font-bold text-white">
                   {project.title}
                 </h3>
               </div>
             </div>
 
-            <div className="p-6 sm:p-8 space-y-6">
-              <div className="flex items-center gap-2 text-xs font-medium text-[#64748B]">
-                <span className="text-[#2563EB] font-semibold">{project.category}</span>
+            <div className="p-6 sm:p-8 space-y-6 text-left">
+              <div className="flex items-center gap-2 text-xs font-mono text-[var(--text-muted)]">
+                <span className="text-[var(--accent)] font-semibold">{project.category}</span>
                 <span aria-hidden="true">·</span>
-                <span>Demonstration Blueprint (Not a completed client engagement)</span>
+                <span>Sample Setup</span>
               </div>
 
-              <p className="text-base text-[#0F172A] leading-relaxed">{project.fullOverview}</p>
+              <p className="text-sm sm:text-base text-[var(--text-secondary)] leading-relaxed">
+                {project.fullOverview}
+              </p>
 
               <div>
-                <h4 className="text-sm font-bold text-[#0F172A]">Architecture Highlights</h4>
+                <h4 className="text-xs font-mono uppercase tracking-[0.18em] text-[var(--accent)] font-bold">
+                  Key Features
+                </h4>
                 <ul className="mt-3 space-y-2.5">
                   {project.architectureHighlights.map((point) => (
-                    <li key={point} className="flex items-start gap-2.5 text-sm text-[#0F172A]">
+                    <li
+                      key={point}
+                      className="flex items-start gap-2.5 text-xs sm:text-sm text-[var(--text-primary)]"
+                    >
                       <Check
-                        className="w-4 h-4 text-[#2563EB] shrink-0 mt-0.5"
+                        className="w-4 h-4 text-[var(--accent)] shrink-0 mt-0.5"
                         aria-hidden="true"
                       />
                       <span>{point}</span>
@@ -237,30 +261,30 @@ export function ProjectDetailModal({
                 </ul>
               </div>
 
-              <div className="pt-4 border-t border-slate-200">
-                <h4 className="text-xs font-semibold text-[#64748B]">Technologies Demonstrated</h4>
-                <p className="mt-1.5 text-sm font-mono text-[#0F172A]">
+              <div className="pt-4 border-t border-[var(--border-subtle)]">
+                <h4 className="text-xs font-mono text-[var(--text-muted)]">Tools Used</h4>
+                <p className="mt-1.5 text-xs sm:text-sm font-mono text-[var(--text-primary)]">
                   {project.technologies.join(' · ')}
                 </p>
               </div>
 
-              <div className="pt-4 border-t border-slate-200 flex flex-wrap items-center justify-between gap-3">
+              <div className="pt-4 border-t border-[var(--border-subtle)] flex flex-wrap items-center justify-between gap-3">
                 <button
                   type="button"
                   onClick={() => {
                     onClose();
                     onRequestSimilar('Multiple / Integrated Solution');
                   }}
-                  className="inline-flex items-center gap-2 px-5 py-3 rounded-lg bg-[#2563EB] hover:bg-[#1D4ED8] text-white text-sm font-semibold transition-colors cursor-pointer"
+                  className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-[var(--accent-contrast)] text-xs font-bold uppercase tracking-wider transition-colors cursor-pointer"
                 >
-                  <span>Request a Similar Solution</span>
+                  <span>Request a Setup Like This</span>
                   <ArrowRight className="w-4 h-4" aria-hidden="true" />
                 </button>
 
                 <button
                   type="button"
                   onClick={onClose}
-                  className="px-4 py-3 rounded-lg border border-slate-200 text-sm font-semibold text-[#64748B] hover:text-[#0F172A] cursor-pointer"
+                  className="px-4 py-3 rounded-xl border border-[var(--border-subtle)] text-xs font-semibold text-[var(--text-secondary)] hover:text-[var(--text-primary)] cursor-pointer"
                 >
                   Close
                 </button>
@@ -298,9 +322,9 @@ export function LegalModal({docType, onClose}: LegalModalProps) {
         <motion.div
           initial={prefersReducedMotion ? {opacity: 1} : {opacity: 0}}
           animate={{opacity: 1}}
-          exit={prefersReducedMotion ? {opacity: 0} : {opacity: 0}}
+          exit={{opacity: 0}}
           transition={{duration: 0.18}}
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#0B1220]/75 backdrop-blur-sm"
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-md"
           role="dialog"
           aria-modal="true"
           aria-labelledby="legal-modal-title"
@@ -308,31 +332,31 @@ export function LegalModal({docType, onClose}: LegalModalProps) {
         >
           <motion.div
             initial={
-              prefersReducedMotion ? {opacity: 1, scale: 1} : {opacity: 0, scale: 0.97, y: 10}
+              prefersReducedMotion ? {opacity: 1, scale: 1} : {opacity: 0, scale: 0.96, y: 12}
             }
             animate={{opacity: 1, scale: 1, y: 0}}
             exit={
-              prefersReducedMotion ? {opacity: 0, scale: 1} : {opacity: 0, scale: 0.97, y: 8}
+              prefersReducedMotion ? {opacity: 0, scale: 1} : {opacity: 0, scale: 0.96, y: 8}
             }
             transition={{duration: 0.22, ease: MODERN_EASE}}
-            className="w-full max-w-xl max-h-[85vh] overflow-y-auto rounded-2xl bg-white border border-slate-200 shadow-2xl p-6 sm:p-8"
+            className="w-full max-w-xl max-h-[85vh] overflow-y-auto rounded-2xl bg-[var(--bg-surface)] border border-[var(--border-subtle)] text-[var(--text-primary)] shadow-2xl p-6 sm:p-8 text-left"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="flex items-center justify-between gap-4 pb-4 border-b border-slate-200">
-              <h3 id="legal-modal-title" className="text-xl font-bold text-[#0F172A]">
+            <div className="flex items-center justify-between gap-4 pb-4 border-b border-[var(--border-subtle)]">
+              <h3 id="legal-modal-title" className="text-xl font-bold text-[var(--text-primary)]">
                 {isPrivacy ? 'Privacy Policy' : 'Terms and Conditions'}
               </h3>
               <button
                 type="button"
                 onClick={onClose}
                 aria-label="Close legal notice"
-                className="w-9 h-9 rounded-lg bg-slate-100 hover:bg-slate-200 text-[#0F172A] flex items-center justify-center cursor-pointer transition-colors"
+                className="w-9 h-9 rounded-lg bg-[var(--bg-primary)] border border-[var(--border-subtle)] hover:border-[var(--accent-border)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] flex items-center justify-center cursor-pointer transition-colors"
               >
-                <X className="w-5 h-5" />
+                <X className="w-4 h-4" />
               </button>
             </div>
 
-            <div className="mt-5 space-y-4 text-sm text-[#64748B] leading-relaxed">
+            <div className="mt-5 space-y-4 text-sm text-[var(--text-secondary)] leading-relaxed">
               {isPrivacy ? (
                 <>
                   <p>
@@ -346,8 +370,7 @@ export function LegalModal({docType, onClose}: LegalModalProps) {
                     own email application.
                   </p>
                   <p>
-                    For privacy questions or data removal requests related to prior correspondence,
-                    contact us at {COMPANY_INFO.emailPlaceholder} or{' '}
+                    For privacy questions, contact us at {COMPANY_INFO.emailPlaceholder} or{' '}
                     {COMPANY_INFO.whatsappInternational}.
                   </p>
                 </>
@@ -361,22 +384,17 @@ export function LegalModal({docType, onClose}: LegalModalProps) {
                   <p>
                     Sample architectures displayed in the Projects section are demonstration
                     blueprints for scoping discussions. Final project deliverables, timelines,
-                    warranties, and service-level terms are defined in written client proposals and
-                    agreements.
-                  </p>
-                  <p>
-                    Third-party technology names and trademarks referenced in the Technology
-                    Expertise section remain the property of their respective owners.
+                    warranties, and service-level terms are defined in written client proposals.
                   </p>
                 </>
               )}
             </div>
 
-            <div className="mt-6 pt-4 border-t border-slate-200 flex justify-end">
+            <div className="mt-6 pt-4 border-t border-[var(--border-subtle)] flex justify-end">
               <button
                 type="button"
                 onClick={onClose}
-                className="px-5 py-2.5 rounded-lg bg-[#0B1220] hover:bg-[#142D4E] text-white text-sm font-semibold cursor-pointer transition-colors"
+                className="px-5 py-2.5 rounded-xl bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-[var(--accent-contrast)] text-xs font-bold uppercase tracking-wider cursor-pointer transition-colors"
               >
                 Close
               </button>

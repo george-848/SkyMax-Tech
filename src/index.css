@@ -4,20 +4,126 @@
   --font-display: "Plus Jakarta Sans", ui-sans-serif, system-ui, -apple-system, sans-serif;
   --font-sans: "DM Sans", ui-sans-serif, system-ui, -apple-system, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
-  --color-midnight: #0B1220;
-  --color-deep-navy: #142D4E;
-  --color-electric-blue: #2563EB;
-  --color-bright-cyan: #06B6D4;
-  --color-cloud-white: #F8FAFC;
-  --color-slate-grey: #64748B;
-  --color-ink: #0F172A;
+}
+
+/* ==========================================================================
+   Theme 1: Cobalt Slate (Default Dark)
+   ========================================================================== */
+:root,
+:root[data-theme="cobalt-slate"] {
+  color-scheme: dark;
+  --bg-primary: #070B14;
+  --bg-secondary: #0C1322;
+  --bg-surface: #111A2E;
+  --bg-surface-hover: #17233D;
+  --bg-input: #070B14;
+  --border-subtle: #1E293B;
+  --text-primary: #F8FAFC;
+  --text-secondary: #94A3B8;
+  --text-muted: #64748B;
+  --accent: #38BDF8;
+  --accent-hover: #7DD3FC;
+  --accent-deep: #2563EB;
+  --accent-contrast: #070B14;
+  --accent-soft: rgba(56, 189, 248, 0.12);
+  --accent-border: rgba(56, 189, 248, 0.32);
+  --accent-glow: rgba(56, 189, 248, 0.08);
+  --accent-on-photo: #38BDF8;
+  --hero-img-opacity: 0.36;
+  --shadow-card: 0 20px 45px -24px rgba(0, 0, 0, 0.85);
+}
+
+/* ==========================================================================
+   Theme 2: Nordic Daylight (Clean Light)
+   ========================================================================== */
+:root[data-theme="nordic-daylight"] {
+  color-scheme: light;
+  --bg-primary: #FFFFFF;
+  --bg-secondary: #F4F7FB;
+  --bg-surface: #FFFFFF;
+  --bg-surface-hover: #F1F5F9;
+  --bg-input: #F8FAFC;
+  --border-subtle: #E2E8F0;
+  --text-primary: #0F172A;
+  --text-secondary: #475569;
+  --text-muted: #64748B;
+  --accent: #1D4ED8;
+  --accent-hover: #1E40AF;
+  --accent-deep: #0284C7;
+  --accent-contrast: #FFFFFF;
+  --accent-soft: rgba(29, 78, 216, 0.08);
+  --accent-border: rgba(29, 78, 216, 0.25);
+  --accent-glow: rgba(29, 78, 216, 0.06);
+  --accent-on-photo: #60A5FA;
+  --hero-img-opacity: 0.2;
+  --shadow-card: 0 12px 32px -18px rgba(15, 23, 42, 0.14);
+}
+
+/* ==========================================================================
+   Theme 3: Graphite Amber (Executive Dark)
+   ========================================================================== */
+:root[data-theme="graphite-amber"] {
+  color-scheme: dark;
+  --bg-primary: #09090B;
+  --bg-secondary: #111114;
+  --bg-surface: #18181B;
+  --bg-surface-hover: #222226;
+  --bg-input: #09090B;
+  --border-subtle: #27272A;
+  --text-primary: #FAFAFA;
+  --text-secondary: #A1A1AA;
+  --text-muted: #71717A;
+  --accent: #F59E0B;
+  --accent-hover: #FBBF24;
+  --accent-deep: #D97706;
+  --accent-contrast: #09090B;
+  --accent-soft: rgba(245, 158, 11, 0.12);
+  --accent-border: rgba(245, 158, 11, 0.32);
+  --accent-glow: rgba(245, 158, 11, 0.08);
+  --accent-on-photo: #FBBF24;
+  --hero-img-opacity: 0.34;
+  --shadow-card: 0 20px 45px -24px rgba(0, 0, 0, 0.85);
+}
+
+/* ==========================================================================
+   Theme 4: Alabaster Teal (Clean Mineral Light)
+   ========================================================================== */
+:root[data-theme="alabaster-teal"] {
+  color-scheme: light;
+  --bg-primary: #F8FAFC;
+  --bg-secondary: #EFF4F6;
+  --bg-surface: #FFFFFF;
+  --bg-surface-hover: #F1F5F9;
+  --bg-input: #F8FAFC;
+  --border-subtle: #CBD5E1;
+  --text-primary: #0F172A;
+  --text-secondary: #334155;
+  --text-muted: #64748B;
+  --accent: #0F766E;
+  --accent-hover: #115E59;
+  --accent-deep: #0284C7;
+  --accent-contrast: #FFFFFF;
+  --accent-soft: rgba(15, 118, 110, 0.09);
+  --accent-border: rgba(15, 118, 110, 0.26);
+  --accent-glow: rgba(15, 118, 110, 0.06);
+  --accent-on-photo: #2DD4BF;
+  --hero-img-opacity: 0.2;
+  --shadow-card: 0 12px 32px -18px rgba(15, 23, 42, 0.12);
 }
 
 @layer base {
   html {
     font-family: var(--font-sans);
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
     scroll-behavior: smooth;
     scroll-padding-top: 5rem;
+  }
+
+  body {
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    transition: background-color 200ms ease, color 200ms ease;
   }
 
   h1,
@@ -26,6 +132,11 @@
   h4 {
     font-family: var(--font-display);
     letter-spacing: -0.02em;
+  }
+
+  ::selection {
+    background-color: var(--accent);
+    color: var(--accent-contrast);
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -43,33 +154,17 @@
   }
 }
 
-/* Subtle architectural grid background for Midnight Navy sections */
-.bg-navy-grid {
-  background-image:
-    linear-gradient(to right, rgba(255, 255, 255, 0.04) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
-  background-size: 48px 48px;
-}
-
-/* Light editorial hairline grid */
-.bg-slate-grid {
-  background-image:
-    linear-gradient(to right, rgba(15, 23, 42, 0.035) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(15, 23, 42, 0.035) 1px, transparent 1px);
-  background-size: 48px 48px;
-}
-
 @keyframes hero-swing {
   0%,
   100% {
-    transform: scale(1.07) translate3d(-1.2%, -0.6%, 0) rotate(-0.8deg);
+    transform: scale(1.06) translate3d(-1.6%, -0.8%, 0) rotate(-0.9deg);
   }
   50% {
-    transform: scale(1.11) translate3d(1.2%, 0.8%, 0) rotate(0.8deg);
+    transform: scale(1.11) translate3d(1.6%, 0.8%, 0) rotate(0.9deg);
   }
 }
 
 .animate-hero-swing {
-  animation: hero-swing 14s ease-in-out infinite;
+  animation: hero-swing 12s ease-in-out infinite;
   transform-origin: center center;
 }

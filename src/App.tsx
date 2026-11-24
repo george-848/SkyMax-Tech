@@ -3,143 +3,162 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {useEffect, useState} from 'react';
-import {AnimatePresence, motion, MotionConfig, useReducedMotion} from 'motion/react';
+import {useCallback, useEffect, useState} from 'react';
+import {MotionConfig} from 'motion/react';
 import {Navbar} from './components/Navbar';
-import {HomePage} from './components/HomePage';
+import {HeroSection} from './components/HeroSection';
 import {AboutSection} from './components/AboutSection';
 import {ServicesSection} from './components/ServicesSection';
 import {SolutionsAndWhySection} from './components/SolutionsAndWhySection';
 import {ProjectsSection} from './components/ProjectsSection';
+import {ProcessSection} from './components/ProcessSection';
+import {TechExpertiseSection} from './components/TechExpertiseSection';
 import {ContactSection} from './components/ContactSection';
 import {Footer} from './components/Footer';
 import {LegalModal, ProjectDetailModal, ServiceDetailModal} from './components/Modals';
-import {MODERN_EASE} from './components/MotionPrimitives';
-import {COMPANY_INFO, PageId, ProjectItem, ServiceItem} from './data/companyConfig';
+import {ThemeSwitcher} from './components/ThemeSwitcher';
+import {COMPANY_INFO, ProjectItem, SectionId, ServiceItem} from './data/companyConfig';
+import {DEFAULT_THEME, THEME_OPTIONS, ThemeId} from './data/themes';
 
-const VALID_PAGES: PageId[] = ['home', 'about', 'services', 'solutions', 'projects', 'contact'];
+const SECTIONS: SectionId[] = [
+  'hero',
+  'about',
+  'services',
+  'why-us',
+  'projects',
+  'process',
+  'tech',
+  'contact',
+];
 
-const PAGE_TITLES: Record<PageId, string> = {
-  home: `${COMPANY_INFO.name} | Enterprise IT, Cloud & Software Solutions`,
-  about: `About Us | ${COMPANY_INFO.name}`,
-  services: `Services | ${COMPANY_INFO.name}`,
-  solutions: `Solutions & Technology Stack | ${COMPANY_INFO.name}`,
-  projects: `Projects & Portfolio | ${COMPANY_INFO.name}`,
-  contact: `Contact & Request a Quote | ${COMPANY_INFO.name}`,
-};
+const THEME_STORAGE_KEY = 'skymax_theme';
 
-function getPageFromHash(): PageId {
-  const hash = window.location.hash.replace('#', '').toLowerCase() as PageId;
-  return VALID_PAGES.includes(hash) ? hash : 'home';
+function getInitialTheme(): ThemeId {
+  try {
+    const saved = window.localStorage.getItem(THEME_STORAGE_KEY) as ThemeId | null;
+    if (saved && THEME_OPTIONS.some((t) => t.id === saved)) {
+      return saved;
+    }
+  } catch {
+    // Ignore storage access restrictions
+  }
+  return DEFAULT_THEME;
 }
 
 export default function App() {
-  const [activePage, setActivePage] = useState<PageId>(() => getPageFromHash());
+  const [activeTheme, setActiveTheme] = useState<ThemeId>(() => getInitialTheme());
+  const [activeSection, setActiveSection] = useState<SectionId>('hero');
   const [selectedService, setSelectedService] = useState<ServiceItem | null>(null);
   const [selectedProject, setSelectedProject] = useState<ProjectItem | null>(null);
   const [legalDoc, setLegalDoc] = useState<'privacy' | 'terms' | null>(null);
   const [preselectedService, setPreselectedService] = useState<string>(
-    'Web Application Development'
+    'Full-Stack SaaS Web Applications'
   );
-  const prefersReducedMotion = useReducedMotion();
 
   useEffect(() => {
-    document.title = PAGE_TITLES[activePage];
-  }, [activePage]);
-
-  useEffect(() => {
-    const onHashChange = () => {
-      setActivePage(getPageFromHash());
-      window.scrollTo({top: 0, behavior: 'smooth'});
-    };
-    window.addEventListener('hashchange', onHashChange);
-    return () => window.removeEventListener('hashchange', onHashChange);
+    document.title = `${COMPANY_INFO.name} | Business IT, Cloud & Full-Stack SaaS Solutions`;
   }, []);
 
-  const navigateTo = (page: PageId, serviceChoice?: string) => {
+  useEffect(() => {
+    document.documentElement.dataset.theme = activeTheme;
+    try {
+      window.localStorage.setItem(THEME_STORAGE_KEY, activeTheme);
+    } catch {
+      // Ignore storage access restrictions
+    }
+  }, [activeTheme]);
+
+  // Scroll-spy for single-page menu arrangement
+  useEffect(() => {
+    const onScroll = () => {
+      const scrollMarker = window.scrollY + 150;
+      for (const id of SECTIONS) {
+        const el = document.getElementById(id);
+        if (el) {
+          const top = el.offsetTop;
+          const height = el.offsetHeight;
+          if (scrollMarker >= top && scrollMarker < top + height) {
+            setActiveSection(id);
+            break;
+          }
+        }
+      }
+    };
+
+    onScroll();
+    window.addEventListener('scroll', onScroll, {passive: true});
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
+  const scrollToSection = useCallback((sectionId: SectionId, serviceChoice?: string) => {
     if (serviceChoice) {
       setPreselectedService(serviceChoice);
     }
-    setActivePage(page);
-    if (window.location.hash !== `#${page}`) {
-      window.history.pushState(null, '', `#${page}`);
+    setActiveSection(sectionId);
+    const target = document.getElementById(sectionId);
+    if (target) {
+      const offsetTop = target.getBoundingClientRect().top + window.scrollY - 76;
+      window.scrollTo({top: Math.max(0, offsetTop), behavior: 'smooth'});
     }
-    window.scrollTo({top: 0, behavior: 'smooth'});
-  };
+  }, []);
+
+  useEffect(() => {
+    const rawHash = window.location.hash.replace('#', '').toLowerCase() as SectionId;
+    if (SECTIONS.includes(rawHash) && rawHash !== 'hero') {
+      const timer = setTimeout(() => scrollToSection(rawHash), 120);
+      return () => clearTimeout(timer);
+    }
+  }, [scrollToSection]);
 
   return (
     <MotionConfig reducedMotion="user">
-      <div className="min-h-screen flex flex-col bg-[#F8FAFC] text-[#0F172A]">
-        <Navbar activePage={activePage} onNavigate={(page) => navigateTo(page)} />
+      <div className="min-h-screen flex flex-col bg-[var(--bg-primary)] text-[var(--text-primary)] overflow-x-hidden transition-colors duration-200">
+        <Navbar activeSection={activeSection} onNavigate={(id) => scrollToSection(id)} />
 
-        <main className="flex-1">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={activePage}
-              initial={prefersReducedMotion ? {opacity: 1, y: 0} : {opacity: 0, y: 8}}
-              animate={{opacity: 1, y: 0}}
-              exit={prefersReducedMotion ? {opacity: 1, y: 0} : {opacity: 0, y: -6}}
-              transition={
-                prefersReducedMotion
-                  ? {duration: 0}
-                  : {duration: 0.22, ease: MODERN_EASE}
-              }
-            >
-              {activePage === 'home' && (
-                <HomePage
-                  onNavigate={navigateTo}
-                  onSelectService={(service) => setSelectedService(service)}
-                  onSelectProject={(project) => setSelectedProject(project)}
-                />
-              )}
+        <main className="flex-1 w-full">
+          <HeroSection
+            onStartProject={() => scrollToSection('contact', 'General IT Consultation')}
+            onViewProjects={() => scrollToSection('projects')}
+          />
 
-              {activePage === 'about' && (
-                <AboutSection onRequestQuoteClick={() => navigateTo('contact')} />
-              )}
+          <AboutSection onScheduleConsultation={() => scrollToSection('contact')} />
 
-              {activePage === 'services' && (
-                <ServicesSection
-                  onLearnMore={(service) => setSelectedService(service)}
-                  onRequestServiceQuote={(serviceTitle) => navigateTo('contact', serviceTitle)}
-                />
-              )}
+          <ServicesSection
+            onLearnMore={(service) => setSelectedService(service)}
+            onRequestServiceQuote={(serviceTitle) => scrollToSection('contact', serviceTitle)}
+          />
 
-              {activePage === 'solutions' && (
-                <SolutionsAndWhySection
-                  onDiscussSolution={(serviceTitle) => navigateTo('contact', serviceTitle)}
-                />
-              )}
+          <SolutionsAndWhySection
+            onDiscussSolution={(serviceTitle) => scrollToSection('contact', serviceTitle)}
+          />
 
-              {activePage === 'projects' && (
-                <ProjectsSection
-                  onSelectProject={(project) => setSelectedProject(project)}
-                  onRequestQuoteClick={() => navigateTo('contact')}
-                />
-              )}
+          <ProjectsSection onSelectProject={(project) => setSelectedProject(project)} />
 
-              {activePage === 'contact' && (
-                <ContactSection preselectedService={preselectedService} />
-              )}
-            </motion.div>
-          </AnimatePresence>
+          <ProcessSection />
+
+          <TechExpertiseSection />
+
+          <ContactSection preselectedService={preselectedService} />
         </main>
 
         <Footer
-          onNavigate={(page) => navigateTo(page)}
+          onNavigate={(id) => scrollToSection(id)}
           onOpenService={(service) => setSelectedService(service)}
           onOpenLegal={(doc) => setLegalDoc(doc)}
         />
 
+        <ThemeSwitcher activeTheme={activeTheme} onSelectTheme={setActiveTheme} />
+
         <ServiceDetailModal
           service={selectedService}
           onClose={() => setSelectedService(null)}
-          onRequestQuote={(title) => navigateTo('contact', title)}
+          onRequestQuote={(title) => scrollToSection('contact', title)}
         />
 
         <ProjectDetailModal
           project={selectedProject}
           onClose={() => setSelectedProject(null)}
-          onRequestSimilar={(category) => navigateTo('contact', category)}
+          onRequestSimilar={(category) => scrollToSection('contact', category)}
         />
 
         <LegalModal docType={legalDoc} onClose={() => setLegalDoc(null)} />
